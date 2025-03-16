@@ -15,4 +15,12 @@ class Merk extends Model
     ];
 
     protected $table = 'merk';
+
+    public static function createCode()
+    {
+        $latestRecord = self::orderByRaw("CAST(SUBSTRING(codeMerk, 3, LENGTH(codeMerk) - 2) AS UNSIGNED) DESC")->first();
+        $latestCodeNumber = optional($latestRecord)->codeMerk;
+        $nextCodeNumber = $latestCodeNumber ? intval(substr($latestCodeNumber, 2)) + 1 : 1;
+        return 'MR' . str_pad($nextCodeNumber, 5, '0', STR_PAD_LEFT);
+    }
 }

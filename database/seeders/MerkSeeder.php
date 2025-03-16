@@ -14,16 +14,16 @@ class MerkSeeder extends Seeder
     public function run(): void
     {
         $merks = [
-            ['codeMerk' => 'MR00001', 'merk' => 'Toyota'],
-            ['codeMerk' => 'MR00002', 'merk' => 'Honda'],
-            ['codeMerk' => 'MR00003', 'merk' => 'Nissan'],
-            ['codeMerk' => 'MR00004', 'merk' => 'Mazda'],
-            ['codeMerk' => 'MR00005', 'merk' => 'Mitsubishi'],
-            ['codeMerk' => 'MR00006', 'merk' => 'Suzuki'],
-            ['codeMerk' => 'MR00007', 'merk' => 'Hyundai'],
-            ['codeMerk' => 'MR00008', 'merk' => 'Kia'],
+            ['codeMerk' => 'MR00001', 'merk' => 'TOYOTA'],
+            ['codeMerk' => 'MR00002', 'merk' => 'HONDA'],
+            ['codeMerk' => 'MR00003', 'merk' => 'NISSAN'],
+            ['codeMerk' => 'MR00004', 'merk' => 'MAZDA'],
+            ['codeMerk' => 'MR00005', 'merk' => 'MITSUBISHI'],
+            ['codeMerk' => 'MR00006', 'merk' => 'SUZUKI'],
+            ['codeMerk' => 'MR00007', 'merk' => 'HYUNDAI'],
+            ['codeMerk' => 'MR00008', 'merk' => 'KIA'],
             ['codeMerk' => 'MR00009', 'merk' => 'BMW'],
-            ['codeMerk' => 'MR00010', 'merk' => 'Mercedes-Benz'],
+            ['codeMerk' => 'MR00010', 'merk' => 'MERCEDES-BENZ'],
         ];
 
         foreach ($merks as $merk) {

@@ -14,9 +14,9 @@ class TransportationsSeeder extends Seeder
     public function run(): void
     {
         $transportations = [
-            ['codeTransportation' => 'TP00001', 'transportation' => 'Mobil'],
-            ['codeTransportation' => 'TP00002', 'transportation' => 'Motor'],
-            ['codeTransportation' => 'TP00003', 'transportation' => 'Bus']
+            ['codeTransportation' => 'TP00001', 'transportation' => 'MOBIL'],
+            ['codeTransportation' => 'TP00002', 'transportation' => 'MOTOR'],
+            ['codeTransportation' => 'TP00003', 'transportation' => 'BUS']
         ];
 
         foreach ($transportations as $transportation) {

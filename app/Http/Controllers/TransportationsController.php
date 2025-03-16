@@ -13,6 +13,7 @@ class TransportationsController extends Controller
     public function index()
     {
         try {
+            $codeTransportation = Transportations::createCode();
             $page = request()->input('page', 1);
             $entries = request()->input('entries', 10);
             $search = request()->input('search');
@@ -25,7 +26,7 @@ class TransportationsController extends Controller
 
             $transportations = $query->paginate($entries);
 
-            return view('transportations.index', compact('transportations'))
+            return view('transportations.index', compact(['transportations','codeTransportation']))
                 ->with('i', ($page - 1) * $entries);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);

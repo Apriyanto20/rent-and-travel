@@ -13,6 +13,7 @@ class RentalOptionsController extends Controller
     public function index()
     {
         try {
+            $codeRentalOptions = RentalOptions::createCode();
             $page = request()->input('page', 1);
             $entries = request()->input('entries', 10);
             $search = request()->input('search');
@@ -25,7 +26,7 @@ class RentalOptionsController extends Controller
 
             $rentalOptions = $query->paginate($entries);
 
-            return view('rentalOptions.index', compact('rentalOptions'))
+            return view('rentalOptions.index', compact(['rentalOptions', 'codeRentalOptions']))
                 ->with('i', ($page - 1) * $entries);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);
@@ -58,7 +59,7 @@ class RentalOptionsController extends Controller
                 ->with('message_insert', 'Data Berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()
-                ->route('merks.index')
+                ->route('rentalOptions.index')
                 ->with('error_message', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
         }
     }

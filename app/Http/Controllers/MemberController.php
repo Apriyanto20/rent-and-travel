@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Members;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
@@ -38,7 +40,11 @@ class MemberController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('members.create');
+        } catch (\Exception $e) {
+            return response()->view('error', [], 404);
+        }
     }
 
     /**
@@ -78,11 +84,20 @@ class MemberController extends Controller
                 'address' => $request->input('address'),
                 'dateOfBirth' => $request->input('dateOfBirth'),
                 'gender' => $request->input('gender'),
-                'photo' => $photoFilePath,
-                'photoKtp' => $photoKtpFilePath,
+                'photo' => $photoFileName,
+                'photoKtp' => $photoKtpFileName,
             ];
 
             Members::create($data);
+
+            $dataUser = [
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('nik')),
+                'role' => 'M',
+            ];
+
+            User::create($dataUser);
 
             return redirect()
                 ->route('members.index')
@@ -105,7 +120,14 @@ class MemberController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $members = Members::where('id', $id)->first();
+            return view('members.edit')->with([
+                'members' => $members
+            ]);
+        } catch (\Exception $e) {
+            return response()->view('error', [], 404);
+        }
     }
 
     /**
@@ -120,39 +142,44 @@ class MemberController extends Controller
                 return redirect()->back()->with('error', 'Data tidak ditemukan.');
             }
 
-            // Simpan nama file lama untuk referensi
+            $userUp = User::where('email', $user->email)->first();
+
+            if ($userUp) {
+                $userUp->name = $request->input('name');
+                $userUp->email = $request->input('email');
+                $userUp->password = Hash::make($request->input('nik'));
+                $userUp->save();
+            }
+
             $oldPhoto = $user->photo;
             $oldPhotoKtp = $user->photoKtp;
 
             $kode = date('YmdHis');
 
-            // Jika ada file photo baru yang diunggah
             if ($request->hasFile('photo')) {
-                // Hapus file lama jika ada
-                if ($oldPhoto && file_exists(public_path($oldPhoto))) {
-                    unlink(public_path($oldPhoto));
+                $photoPath = public_path('member/img/' . $oldPhoto);
+                if (!empty($oldPhoto) && file_exists($photoPath)) {
+                    unlink($photoPath);
                 }
 
                 $photoFile = $request->file('photo');
                 $photoFileName = $kode . '-photo.' . $photoFile->extension();
-                $photoFilePath = $photoFile->move(public_path('member/img'), $photoFileName);
-                $user->photo = 'member/img/' . $photoFileName;
+                $photoFile->move(public_path('member/img'), $photoFileName);
+                $user->photo = $photoFileName;
             }
 
-            // Jika ada file photoKtp baru yang diunggah
             if ($request->hasFile('photoKtp')) {
-                // Hapus file lama jika ada
-                if ($oldPhotoKtp && file_exists(public_path($oldPhotoKtp))) {
-                    unlink(public_path($oldPhotoKtp));
+                $photoKtpPath = public_path('member/ktp/' . $oldPhotoKtp);
+                if (!empty($oldPhotoKtp) && file_exists($photoKtpPath)) {
+                    unlink($photoKtpPath);
                 }
 
                 $photoKtpFile = $request->file('photoKtp');
                 $photoKtpFileName = $kode . '-photoKtp.' . $photoKtpFile->extension();
-                $photoKtpFilePath = $photoKtpFile->move(public_path('member/ktp'), $photoKtpFileName);
-                $user->photoKtp = 'member/ktp/' . $photoKtpFileName;
+                $photoKtpFile->move(public_path('member/ktp'), $photoKtpFileName);
+                $user->photoKtp = $photoKtpFileName;
             }
 
-            // Update data lainnya
             $user->nik = $request->input('nik');
             $user->name = $request->input('name');
             $user->phoneNumber = $request->input('phoneNumber');
@@ -161,7 +188,6 @@ class MemberController extends Controller
             $user->dateOfBirth = $request->input('dateOfBirth');
             $user->gender = $request->input('gender');
 
-            // Simpan perubahan ke database
             $user->save();
 
             return redirect()
@@ -179,6 +205,22 @@ class MemberController extends Controller
     {
         try {
             $data = Members::findOrFail($id);
+            $photoKtpPath = public_path('member/ktp/' . $data->photoKtp);
+            $photoPath = public_path('member/img/' . $data->photo);
+
+            if (!empty($data->photoKtp) && file_exists($photoKtpPath)) {
+                unlink($photoKtpPath);
+            }
+
+            if (!empty($data->photo) && file_exists($photoPath)) {
+                unlink($photoPath);
+            }
+
+            $userUp = User::where('email', $data->email)->first();
+            if ($userUp) {
+                $userUp->delete();
+            }
+            
             $data->delete();
             return back()->with('message_delete', 'Data Berhasil dihapus');
         } catch (\Exception $e) {

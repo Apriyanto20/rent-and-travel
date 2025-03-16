@@ -7,6 +7,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalOptionsController;
 use App\Http\Controllers\TransportationsController;
 use App\Http\Controllers\TransportationsRouteController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,5 +32,74 @@ Route::middleware('auth')->group(function () {
     Route::resource('drivers', DriverController::class);
     Route::resource('transportationRoutes', TransportationsRouteController::class);
 });
+Route::get('/cek-nik', function (Request $request) {
+    try {
+        $nik = Request::get('nik'); // Gunakan input() atau query()
 
-require __DIR__.'/auth.php';
+        if (!$nik) {
+            return response()->json(['error' => 'NIK tidak boleh kosong'], 400);
+        }
+
+        $exists = DB::table('members')->where('nik', $nik)->exists();
+
+        return response()->json(['exists' => $exists]);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage()); // Log error ke Laravel Log
+        return response()->json(['error' => 'Terjadi kesalahan server'], 500);
+    }
+});
+
+Route::get('/cek-email', function (Request $request) {
+    try {
+        $email = Request::get('email'); // Gunakan input() atau query()
+
+        if (!$email) {
+            return response()->json(['error' => 'NIK tidak boleh kosong'], 400);
+        }
+
+        $exists = DB::table('members')->where('email', $email)->exists() ||
+            DB::table('users')->where('email', $email)->exists();
+
+        return response()->json(['exists' => $exists]);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage()); // Log error ke Laravel Log
+        return response()->json(['error' => 'Terjadi kesalahan server'], 500);
+    }
+});
+
+Route::get('/cek-nik-driver', function (Request $request) {
+    try {
+        $nik = Request::get('nik'); // Gunakan input() atau query()
+
+        if (!$nik) {
+            return response()->json(['error' => 'NIK tidak boleh kosong'], 400);
+        }
+
+        $exists = DB::table('drivers')->where('nik', $nik)->exists();
+
+        return response()->json(['exists' => $exists]);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage()); // Log error ke Laravel Log
+        return response()->json(['error' => 'Terjadi kesalahan server'], 500);
+    }
+});
+
+Route::get('/cek-email-driver', function (Request $request) {
+    try {
+        $email = Request::get('email'); // Gunakan input() atau query()
+
+        if (!$email) {
+            return response()->json(['error' => 'NIK tidak boleh kosong'], 400);
+        }
+
+        $exists = DB::table('drivers')->where('email', $email)->exists() ||
+            DB::table('users')->where('email', $email)->exists();
+
+        return response()->json(['exists' => $exists]);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage()); // Log error ke Laravel Log
+        return response()->json(['error' => 'Terjadi kesalahan server'], 500);
+    }
+});
+
+require __DIR__ . '/auth.php';

@@ -22,4 +22,5 @@ class Members extends Model
     ];
 
     protected $table = 'members';
+    
 }

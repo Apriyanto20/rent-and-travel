@@ -13,6 +13,7 @@ class TransportationsRouteController extends Controller
     public function index()
     {
         try {
+            $codeTransportationRoute = TransportationRoute::createCode();
             $page = request()->input('page', 1);
             $entries = request()->input('entries', 10);
             $search = request()->input('search');
@@ -26,7 +27,7 @@ class TransportationsRouteController extends Controller
 
             $transportationRoutes = $query->paginate($entries);
 
-            return view('transportationRoutes.index', compact('transportationRoutes'))
+            return view('transportationRoute.index', compact(['transportationRoutes', 'codeTransportationRoute']))
                 ->with('i', ($page - 1) * $entries);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);
@@ -47,10 +48,13 @@ class TransportationsRouteController extends Controller
     public function store(Request $request)
     {
         try {
+            $routeFirst = $request->input('routeFirst');
+            $routeSecond = $request->input('routeSecond');
+            $route = $routeFirst . ' - ' . $routeSecond;
             $data = [
                 'codeRoute' => $request->input('codeRoute'),
-                'route' => $request->input('route'),
-                'route_price' => $request->input('route_price'),
+                'route' => $route,
+                'route_price' => $request->input('price'),
             ];
 
             TransportationRoute::create($data);
@@ -60,7 +64,7 @@ class TransportationsRouteController extends Controller
                 ->with('message_insert', 'Data Berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()
-                ->route('merks.index')
+                ->route('transportationRoutes.index')
                 ->with('error_message', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
         }
     }
@@ -89,7 +93,7 @@ class TransportationsRouteController extends Controller
         try {
             $data = [
                 'codeRoute' => $request->input('codeRoute'),
-                'route' => $request->input('route'),
+                'route' => $request->input('routes'),
                 'route_price' => $request->input('route_price'),
             ];
 
@@ -100,7 +104,7 @@ class TransportationsRouteController extends Controller
                 ->with('message_update', 'Data Berhasil diupdate');
         } catch (\Exception $e) {
             return redirect()
-                ->route('merks.index')
+                ->route('transportationRoutes.index')
                 ->with('error_message', 'Terjadi kesalahan saat melakukan update data: ' . $e->getMessage());
         }
     }

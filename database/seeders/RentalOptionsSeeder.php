@@ -14,9 +14,9 @@ class RentalOptionsSeeder extends Seeder
     public function run(): void
     {
         $rentalOptions = [
-            ['codeRentalOption' => 'RO00001', 'option' => 'Dengan Driver'],
-            ['codeRentalOption' => 'RO00002', 'option' => 'Tanpa Driver'],
-            ['codeRentalOption' => 'RO00003', 'option' => 'Hanya Driver']
+            ['codeRentalOption' => 'RO00001', 'option' => 'DENGAN DRIVER'],
+            ['codeRentalOption' => 'RO00002', 'option' => 'TANPA DRIVER'],
+            ['codeRentalOption' => 'RO00003', 'option' => 'HANYA DRIVER']
         ];
 
         foreach ($rentalOptions as $rentalOption) {

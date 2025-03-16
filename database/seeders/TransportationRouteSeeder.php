@@ -14,9 +14,9 @@ class TransportationRouteSeeder extends Seeder
     public function run(): void
     {
         $transportationsRoute = [
-            ['codeRoute' => 'TR00001', 'route' => 'Banjar-Bandung', 'route_price' => '150000'],
-            ['codeRoute' => 'TR00002', 'route' => 'Banjar-Jakarta', 'route_price' => '300000'],
-            ['codeRoute' => 'TR00003', 'route' => 'Banjar-Tangerang', 'route_price' => '350000']
+            ['codeRoute' => 'TR00001', 'route' => 'BANJAR-BANDUNG', 'route_price' => '150000'],
+            ['codeRoute' => 'TR00002', 'route' => 'BANJAR-JAKARTA', 'route_price' => '300000'],
+            ['codeRoute' => 'TR00003', 'route' => 'BANJAR-TANGERANG', 'route_price' => '350000']
         ];
 
         foreach ($transportationsRoute as $transportationRoute) {

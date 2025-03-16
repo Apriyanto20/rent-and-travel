@@ -13,6 +13,7 @@ class MerkController extends Controller
     public function index()
     {
         try {
+            $codeMerk = Merk::createCode();
             $page = request()->input('page', 1);
             $entries = request()->input('entries', 10);
             $search = request()->input('search');
@@ -25,7 +26,7 @@ class MerkController extends Controller
 
             $merks = $query->paginate($entries);
 
-            return view('merks.index', compact('merks'))
+            return view('merks.index', compact(['merks', 'codeMerk']))
                 ->with('i', ($page - 1) * $entries);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);

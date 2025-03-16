@@ -31,13 +31,57 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-         {{-- Flsticon --}}
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    {{-- Flsticon --}}
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    {{-- Select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+    {{-- JQUERY --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            width: 100% !important;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db !important;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            height: 43px;
+            border-radius: 24px;
+            color: #1f2937;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__arrow {
+            top: 20% !important;
+            right: 8px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            font-size: 14px !important;
+            top: -2px;
+            left: -6px;
+            position: relative;
+            color: #1f2937;
+        }
+
+        .select2-search__field {
+            font-size: 14px !important;
+            border-radius: 0.5rem;
+        }
+
+        .select2-results {
+            font-size: 14px !important;
+            border-radius: 0px 10px 0px 10px;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -59,6 +103,19 @@
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(".js-example-placeholder-single").select2({
+            placeholder: "Pilih...",
+            allowClear: true,
+            // width: '100%'
+            width: 'resolve'
+        });
+    </script>
+
 </body>
+@stack('scripts')
 
 </html>
