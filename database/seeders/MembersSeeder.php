@@ -16,9 +16,9 @@ class MembersSeeder extends Seeder
         $members = [
             [
                 'nik' => '1234567890123456',
-                'name' => 'ZARA',
+                'name' => 'YANTI',
                 'phoneNumber' => '6281234567890',
-                'email' => 'zara@example.com',
+                'email' => 'yanti@example.com',
                 'address' => 'JL. DIPONEGORO NO. 5',
                 'dateOfBirth' => '1995-06-12',
                 'gender' => 'FEMALE',
