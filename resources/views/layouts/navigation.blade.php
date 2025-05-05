@@ -28,6 +28,15 @@
                                     <div
                                         class="text-[16px] font-bold tracking-wide {{ request()->routeIs('dashboard') || request()->routeIs('dashboard') ? 'text-black' : '' }}">
                                         Master Data</div>
+
+                                    <div class="ms-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
                                 </button>
                             </x-slot>
 
@@ -67,7 +76,9 @@
                                     </div>
                                 </x-dropdown-link>
                                 <hr>
-                                <x-dropdown-link :href="route('transportationRoutes.index')" :class="request()->routeIs('transportationRoutes.index') ? 'text-gray-500 font-bold' : ''">
+                                <x-dropdown-link :href="route('transportationRoutes.index')" :class="request()->routeIs('transportationRoutes.index')
+                                    ? 'text-gray-500 font-bold'
+                                    : ''">
                                     <div class="flex items-center justify-start gap-5">
                                         <div class="mt-1"><i class="fi fi-ss-route"></i></div>
                                         <div>Rute Travel</div>
