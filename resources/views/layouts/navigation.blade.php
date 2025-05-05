@@ -77,6 +77,82 @@
                         </x-dropdown>
                     </li>
                 </div>
+
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <li class="relative list-none">
+                        <x-dropdown>
+                            <x-slot name="trigger">
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-black dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                    <div
+                                        class="text-[16px] font-bold tracking-wide {{ request()->routeIs('dashboard') || request()->routeIs('dashboard') ? 'text-black' : '' }}">
+                                        Rental</div>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                {{-- Dropdown Item Transportasi --}}
+                                <div class="relative">
+                                    <button id="transportasi-button"
+                                        class="flex justify-between items-center w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 dark:text-gray-400 bg-white dark:bg-gray-800 focus:outline-none transition ease-in-out duration-150 {{ request()->routeIs('transportationsRental.index') ? 'text-gray-500 font-bold' : '' }}">
+                                        <div class="flex items-center justify-start gap-5">
+                                            <div class="mt-1"><i class="fi fi-ss-truck-side"></i></div>
+                                            <div>Transportasi</div>
+                                        </div>
+                                        <i class="fi fi-rr-caret-right ml-auto"></i>
+                                    </button>
+
+                                    <div id="transportasi-submenu"
+                                        class="hidden absolute left-full top-0 -mt-1 ml-2 w-52 bg-white dark:bg-gray-800 shadow-lg rounded-md border z-50">
+                                        <x-dropdown-link :href="route('transportationsRental.index')"
+                                            :class="request()->routeIs('transportationsRental.index') ? 'text-gray-500 font-bold' : ''">
+                                            <div class="flex items-center justify-start gap-5">
+                                                <div class="mt-1"><i class="fi fi-ss-truck-side"></i></div>
+                                                <div>Mobil</div>
+                                            </div>
+                                        </x-dropdown-link>
+                                        <x-dropdown-link :href="route('transportationsRental.index')"
+                                            :class="request()->routeIs('transportationsRental.index') ? 'text-gray-500 font-bold' : ''">
+                                            <div class="flex items-center justify-start gap-5">
+                                                <div class="mt-1"><i class="fi fi-ss-moped"></i></div>
+                                                <div>Motor</div>
+                                            </div>
+                                        </x-dropdown-link>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                {{-- Transaction --}}
+                                <x-dropdown-link :href="route('merks.index')"
+                                    :class="request()->routeIs('merks.index') ? 'text-gray-500 font-bold' : ''">
+                                    <div class="flex items-center justify-start gap-5">
+                                        <div class="mt-1"><i class="fi fi-brands-slack"></i></div>
+                                        <div>Transaction</div>
+                                    </div>
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+                    </li>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('coba')" :active="request()->routeIs('coba')">
+                        <div
+                            class="text-[16px] font-bold tracking-wide {{ request()->routeIs('coba') || request()->routeIs('coba') ? 'text-black' : '' }}">
+                            COBA</div>
+                    </x-nav-link>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('cobaLoop')" :active="request()->routeIs('cobaLoop')">
+                        <div
+                            class="text-[16px] font-bold tracking-wide {{ request()->routeIs('cobaLoop') || request()->routeIs('cobaLoop') ? 'text-black' : '' }}">
+                            COBA LOOP</div>
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -167,3 +243,28 @@
         </div>
     </div>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const transportasiButton = document.getElementById('transportasi-button');
+        const transportasiSubmenu = document.getElementById('transportasi-submenu');
+
+        // Toggle submenu on click
+        transportasiButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            transportasiSubmenu.classList.toggle('hidden');
+        });
+
+        // Hide when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!transportasiButton.contains(e.target) && !transportasiSubmenu.contains(e.target)) {
+                transportasiSubmenu.classList.add('hidden');
+            }
+        });
+
+        // Prevent submenu from closing when clicked inside
+        transportasiSubmenu.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>

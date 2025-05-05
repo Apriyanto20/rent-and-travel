@@ -1,12 +1,21 @@
 <?php
 
+use App\Http\Controllers\DetailSeatController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalOptionsController;
+use App\Http\Controllers\ScheduleTravelController;
+use App\Http\Controllers\TransactionsRentalController;
+use App\Http\Controllers\TransactionsTravelController;
 use App\Http\Controllers\TransportationsController;
+use App\Http\Controllers\TransportationsRentalDetailController;
 use App\Http\Controllers\TransportationsRouteController;
+use App\Http\Controllers\TransportationsTravelDetailController;
+use App\Models\TransactionsRental;
+use App\Models\TransactionsTravel;
+use App\Models\TransportationsRentalDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -20,6 +29,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/coba', function () {
+    return view('coba');
+})->middleware(['auth', 'verified'])->name('coba');
+
+Route::get('/cobaLoop', function () {
+    return view('cobaLoop');
+})->middleware(['auth', 'verified'])->name('cobaLoop');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -31,6 +48,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('members', MemberController::class);
     Route::resource('drivers', DriverController::class);
     Route::resource('transportationRoutes', TransportationsRouteController::class);
+
+    Route::resource('transportationsRental', TransportationsRentalDetailController::class);
+    Route::resource('detailSeat', DetailSeatController::class);
+    Route::resource('trasnportationsTravel', TransportationsTravelDetailController::class);
+    Route::resource('scheduleTravel', ScheduleTravelController::class);
+    Route::resource('transactionsTravel', TransactionsTravelController::class);
+    Route::resource('transactionsRental', TransactionsRentalController::class);
+
+    Route::get('/generate-code-detail/{type}', [TransportationsRouteController::class, 'generateCodeDetail']);
+    Route::get('/transportations-rental/{slug}', [TransportationsRouteController::class, 'category'])->name('transportationsRental.category');
+
 });
 Route::get('/cek-nik', function (Request $request) {
     try {

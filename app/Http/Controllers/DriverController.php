@@ -57,6 +57,17 @@ class DriverController extends Controller
         // try {
         $kode = date('YmdHis');
 
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => $request->input('nik'),
+                'role' => 'D'
+            ]);
+        }
+
         // Proses upload photo
         if ($request->hasFile('photo')) {
             $photoFile = $request->file('photo');
@@ -101,14 +112,14 @@ class DriverController extends Controller
 
         Drivers::create($data);
 
-        $dataUser = [
+       /* $dataUser = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('nik')),
             'role' => 'D',
         ];
 
-        User::create($dataUser);
+        User::create($dataUser);*/
 
         return redirect()
             ->route('drivers.index')
@@ -147,72 +158,72 @@ class DriverController extends Controller
     public function update(Request $request, string $id)
     {
         //try {
-            $user = Drivers::find($id);
+        $user = Drivers::find($id);
 
-            if (!$user) {
-                return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        if (!$user) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        $userUp = User::where('email', $user->email)->first();
+
+        if ($userUp) {
+            $userUp->name = $request->input('name');
+            $userUp->email = $request->input('email');
+            $userUp->password = Hash::make($request->input('nik'));
+            $userUp->save();
+        }
+
+        $oldPhoto = $user->photo;
+        $oldPhotoKtp = $user->photoKtp;
+
+        $kode = date('YmdHis');
+
+        if ($request->hasFile('photo')) {
+            $photoPath = public_path('driver/img/' . $oldPhoto);
+            if (!empty($oldPhoto) && file_exists($photoPath)) {
+                unlink($photoPath);
             }
 
-            $userUp = User::where('email', $user->email)->first();
+            $photoFile = $request->file('photo');
+            $photoFileName = $kode . '-photo.' . $photoFile->extension();
+            $photoFile->move(public_path('driver/img'), $photoFileName);
+            $user->photo = $photoFileName;
+        }
 
-            if ($userUp) {
-                $userUp->name = $request->input('name');
-                $userUp->email = $request->input('email');
-                $userUp->password = Hash::make($request->input('nik'));
-                $userUp->save();
+        if ($request->hasFile('photoKtp')) {
+            $photoKtpPath = public_path('driver/ktp/' . $oldPhotoKtp);
+            if (!empty($oldPhotoKtp) && file_exists($photoKtpPath)) {
+                unlink($photoKtpPath);
             }
 
-            $oldPhoto = $user->photo;
-            $oldPhotoKtp = $user->photoKtp;
+            $photoKtpFile = $request->file('photoKtp');
+            $photoKtpFileName = $kode . '-photoKtp.' . $photoKtpFile->extension();
+            $photoKtpFile->move(public_path('driver/ktp'), $photoKtpFileName);
+            $user->photoKtp = $photoKtpFileName;
+        }
 
-            $kode = date('YmdHis');
+        $user->nik = $request->input('nik');
+        $user->name = $request->input('name');
+        $user->driverLicenseNumber = $request->input('driverLicenseNumber');
+        $user->licenseType = $request->input('licenseType');
+        $user->licenseValidityDate = $request->input('licenseValidityDate');
+        $user->address = $request->input('address');
+        $user->phoneNumber = $request->input('phoneNumber');
+        $user->email = $request->input('email');
+        $user->dateOfBirth = $request->input('dateOfBirth');
+        $user->status = $request->input('status');
+        $user->workExperience = $request->input('workExperience');
+        $user->startDate = $request->input('startDate');
+        $user->maritalStatus = $request->input('materialStatus');
+        $user->notes = $request->input('notes');
+        $user->prices = $request->input('prices');
+        $user->userId = Auth::user()->id;
 
-            if ($request->hasFile('photo')) {
-                $photoPath = public_path('driver/img/' . $oldPhoto);
-                if (!empty($oldPhoto) && file_exists($photoPath)) {
-                    unlink($photoPath);
-                }
+        $user->save();
 
-                $photoFile = $request->file('photo');
-                $photoFileName = $kode . '-photo.' . $photoFile->extension();
-                $photoFile->move(public_path('driver/img'), $photoFileName);
-                $user->photo = $photoFileName;
-            }
-
-            if ($request->hasFile('photoKtp')) {
-                $photoKtpPath = public_path('driver/ktp/' . $oldPhotoKtp);
-                if (!empty($oldPhotoKtp) && file_exists($photoKtpPath)) {
-                    unlink($photoKtpPath);
-                }
-
-                $photoKtpFile = $request->file('photoKtp');
-                $photoKtpFileName = $kode . '-photoKtp.' . $photoKtpFile->extension();
-                $photoKtpFile->move(public_path('driver/ktp'), $photoKtpFileName);
-                $user->photoKtp = $photoKtpFileName;
-            }
-
-            $user->nik = $request->input('nik');
-            $user->name = $request->input('name');
-            $user->driverLicenseNumber = $request->input('driverLicenseNumber');
-            $user->licenseType = $request->input('licenseType');
-            $user->licenseValidityDate = $request->input('licenseValidityDate');
-            $user->address = $request->input('address');
-            $user->phoneNumber = $request->input('phoneNumber');
-            $user->email = $request->input('email');
-            $user->dateOfBirth = $request->input('dateOfBirth');
-            $user->status = $request->input('status');
-            $user->workExperience = $request->input('workExperience');
-            $user->startDate = $request->input('startDate');
-            $user->maritalStatus = $request->input('materialStatus');
-            $user->notes = $request->input('notes');
-            $user->prices = $request->input('prices');
-            $user->userId = Auth::user()->id;
-
-            $user->save();
-
-            return redirect()
-                ->route('drivers.index')
-                ->with('message_update', 'Data Berhasil diupdate');
+        return redirect()
+            ->route('drivers.index')
+            ->with('message_update', 'Data Berhasil diupdate');
         /*} catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }*/

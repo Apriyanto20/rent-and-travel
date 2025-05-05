@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rental_options', function (Blueprint $table) {
+        Schema::create('detail_seat', function (Blueprint $table) {
             $table->id();
-            $table->string('codeRentalOption')->unique();
-            $table->string('option');
+            $table->string('codeDetailTransportation');
+            $table->string('seat_code')->unique();
             $table->timestamps();
+
+            $table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_travel_detail')->onDelete('cascade');
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rental_options');
+        Schema::dropIfExists('detail_seat');
     }
 };

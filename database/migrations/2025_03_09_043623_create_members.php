@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->string('nik');
+            $table->string('nik')->unique();
             $table->string('name');
             $table->string('phoneNumber');
             $table->string('email');
@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('photo');
             $table->string('photoKtp');
             $table->timestamps();
+
+            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 

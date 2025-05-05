@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('nik');
+            $table->string('nik')->unique();
             $table->string('name');
             $table->string('driverLicenseNumber');
             $table->string('licenseType');
@@ -32,6 +32,8 @@ return new class extends Migration
             $table->integer('prices');
             $table->integer('userId');
             $table->timestamps();
+
+            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 

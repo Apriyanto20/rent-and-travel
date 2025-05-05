@@ -22,5 +22,14 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'role' => 'A'
         ]);
+
+        $this->call([
+            DriversSeeder::class,
+            MembersSeeder::class,
+            MerkSeeder::class,
+            RentalOptionsSeeder::class,
+            TransportationRouteSeeder::class,
+            TransportationsSeeder::class
+        ]);
     }
 }

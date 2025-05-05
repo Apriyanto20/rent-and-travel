@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transportation_route', function (Blueprint $table) {
             $table->id();
-            $table->string('codeRoute');
+            $table->string('codeRoute')->unique();
             $table->string('route');
             $table->integer('route_price');
             $table->timestamps();
