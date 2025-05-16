@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DriversExport;
 
 class DriverController extends Controller
 {
@@ -256,5 +258,10 @@ class DriverController extends Controller
         } catch (\Exception $e) {
             return back()->with('error_message', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
         }
+    }
+
+        public function export()
+    {
+        return Excel::download(new DriversExport, 'drivers.xlsx');
     }
 }

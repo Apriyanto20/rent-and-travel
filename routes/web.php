@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('merks', MerkController::class);
     Route::resource('rentalOptions', RentalOptionsController::class);
     Route::resource('members', MemberController::class);
+    Route::get('drivers/export/', [DriverController::class, 'export'])->name('drivers.export');
     Route::resource('drivers', DriverController::class);
     Route::resource('transportationRoutes', TransportationsRouteController::class);
 

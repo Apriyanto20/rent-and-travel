@@ -21,6 +21,11 @@
                                 class="border border-sky-500 text-sky-500 px-6 py-2 font-bold rounded-xl hover:bg-sky-100"><i
                                     class="fi fi-rr-user-add mr-1"></i> Tambah Driver</a>
                         </div>
+                        <div class="w-full flex items-end justify-end">
+                            <a href="{{ route('drivers.export') }}"
+                                class="border border-sky-500 text-sky-500 px-6 py-2 font-bold rounded-xl hover:bg-sky-100"><i
+                                    class="fi fi-rr-user-add mr-1"></i> Export Driver</a>
+                        </div>
                     </div>
                     <hr class="mb-4 mt-3 border-2 rounded-xl">
                     <div class="flex justify-center">
