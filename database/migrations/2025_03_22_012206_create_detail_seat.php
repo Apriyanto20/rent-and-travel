@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('seat_code')->unique();
             $table->timestamps();
 
-            $table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_travel_detail')->onDelete('cascade');
+            //$table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_travel_detail')->onDelete('cascade');
         });
     }
 

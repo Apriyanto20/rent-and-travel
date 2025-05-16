@@ -8,7 +8,7 @@ use App\Models\TransportationsRentalDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TransportationsRentalDetailController extends Controller
+class TransportationsRentalMotorcyleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,8 @@ class TransportationsRentalDetailController extends Controller
             $query = TransportationsRentalDetail::query()
                 ->join('merk', 'transportations_rental_detail.codeMerk', '=', 'merk.codeMerk')
                 ->join('transportations', 'transportations_rental_detail.codeTransportation', '=', 'transportations.codeTransportation')
-                ->where('transportations_rental_detail.codeTransportation', 'TP00001');
+                ->where('transportations_rental_detail.codeTransportation', 'TP00002')
+                ->select('merk.*','transportations.*','transportations_rental_detail.*','transportations_rental_detail.id AS id_motor');
 
             if ($search) {
                 $query->where('merk.merk', 'like', '%' . $search . '%')
@@ -32,7 +33,7 @@ class TransportationsRentalDetailController extends Controller
 
             $transportationDetailRental = $query->paginate($entries);
 
-            return view('transportationsRental.index', compact(['transportationDetailRental']))
+            return view('transportationsRental.motorcycle', compact(['transportationDetailRental']))
                 ->with('i', ($page - 1) * $entries);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);
@@ -47,34 +48,15 @@ class TransportationsRentalDetailController extends Controller
         try {
             $merk = Merk::all();
             $transportation = Transportations::all();
-            $codeRentalMobil = TransportationsRentalDetail::codeRentalMobil();
-            return view('transportationsRental.create')->with([
+            $codeRentalMotor = TransportationsRentalDetail::codeRentalMotor();
+            return view('transportationsRental.createMotorcycle')->with([
                 'merk' => $merk,
                 'transportation' => $transportation,
-                'codeRentalMobil' => $codeRentalMobil,
+                'codeRentalMotor' => $codeRentalMotor,
             ]);
         } catch (\Exception $e) {
             return response()->view('error', [], 404);
         }
-    }
-
-    public function generateCodeDetail($type)
-    {
-        switch (strtolower($type)) {
-            case 'bus':
-                $code = TransportationsRentalDetail::createCodeBus();
-                break;
-            case 'car':
-                $code = TransportationsRentalDetail::createCodeCar();
-                break;
-            case 'motor':
-                $code = TransportationsRentalDetail::createCodeMotor();
-                break;
-            default:
-                $code = '';
-        }
-
-        return response()->json(['code' => $code]);
     }
 
     /**
@@ -88,8 +70,8 @@ class TransportationsRentalDetailController extends Controller
         if ($request->hasFile('photo_front')) {
             $photoFront = $request->file('photo_front');
             $photoFrontFileName = $kode . '-front.' . $photoFront->extension();
-            $photoFront->move(public_path('rental/car'), $photoFrontFileName);
-            $photoFrontFilePath = 'rental/car/' . $photoFrontFileName;
+            $photoFront->move(public_path('rental/motorcycle'), $photoFrontFileName);
+            $photoFrontFilePath = 'rental/motorcycle/' . $photoFrontFileName;
         } else {
             return redirect()->back()->with('error', 'Foto depan kendaraan tidak ditemukan');
         }
@@ -97,8 +79,8 @@ class TransportationsRentalDetailController extends Controller
         if ($request->hasFile('photo_right')) {
             $photoRight = $request->file('photo_right');
             $photoRightFileName = $kode . '-right.' . $photoRight->extension();
-            $photoRight->move(public_path('rental/car'), $photoRightFileName);
-            $photoRightFilePath = 'rental/car/' . $photoRightFileName;
+            $photoRight->move(public_path('rental/motorcycle'), $photoRightFileName);
+            $photoRightFilePath = 'rental/motorcycle/' . $photoRightFileName;
         } else {
             return redirect()->back()->with('error', 'Foto kanan kendaraan tidak ditemukan');
         }
@@ -106,8 +88,8 @@ class TransportationsRentalDetailController extends Controller
         if ($request->hasFile('photo_left')) {
             $photoLeft = $request->file('photo_left');
             $photoLeftFileName = $kode . '-left.' . $photoLeft->extension();
-            $photoLeft->move(public_path('rental/car'), $photoLeftFileName);
-            $photoLeftFilePath = 'rental/car/' . $photoLeftFileName;
+            $photoLeft->move(public_path('rental/motorcycle'), $photoLeftFileName);
+            $photoLeftFilePath = 'rental/motorcycle/' . $photoLeftFileName;
         } else {
             return redirect()->back()->with('error', 'Foto kiri kendaraan tidak ditemukan');
         }
@@ -115,8 +97,8 @@ class TransportationsRentalDetailController extends Controller
         if ($request->hasFile('photo_back')) {
             $photoBack = $request->file('photo_back');
             $photoBackFileName = $kode . '-back.' . $photoBack->extension();
-            $photoBack->move(public_path('rental/car'), $photoBackFileName);
-            $photoBackFilePath = 'rental/car/' . $photoBackFileName;
+            $photoBack->move(public_path('rental/motorcycle'), $photoBackFileName);
+            $photoBackFilePath = 'rental/motorcycle/' . $photoBackFileName;
         } else {
             return redirect()->back()->with('error', 'Foto belakang kendaraan tidak ditemukan');
         }
@@ -153,7 +135,7 @@ class TransportationsRentalDetailController extends Controller
 
         TransportationsRentalDetail::create($data);
         return redirect()
-            ->route('transportationsRental.index')
+            ->route('transportationsRentalMotorcycle.index')
             ->with('message_insert', 'Data Berhasil ditambahkan');
     }
 
@@ -174,7 +156,7 @@ class TransportationsRentalDetailController extends Controller
             $merk = Merk::all();
             $transportationsRental = TransportationsRentalDetail::where('codeDetailTransportation', $id)->first();
             // dd($id);
-            return view('transportationsRental.edit')->with([
+            return view('transportationsRental.editMotorcycle')->with([
                 'transportationsRental' => $transportationsRental,
                 'merk' => $merk,
             ]);
@@ -188,7 +170,6 @@ class TransportationsRentalDetailController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //dd($request->all());
         try {
             $vehicle = TransportationsRentalDetail::find($id);
 
@@ -206,53 +187,53 @@ class TransportationsRentalDetailController extends Controller
 
             // Handle upload foto depan
             if ($request->hasFile('photo_front')) {
-                $frontPath = public_path('rental/car/' . $oldFront);
+                $frontPath = public_path('rental/motorcycle/' . $oldFront);
                 if (!empty($oldFront) && file_exists($frontPath)) {
                     unlink($frontPath);
                 }
 
                 $photoFront = $request->file('photo_front');
                 $photoFrontFileName = $kode . '-front.' . $photoFront->extension();
-                $photoFront->move(public_path('rental/car'), $photoFrontFileName);
+                $photoFront->move(public_path('rental/motorcycle'), $photoFrontFileName);
                 $vehicle->photo_front = $photoFrontFileName;
             }
 
             // Handle upload foto kanan
             if ($request->hasFile('photo_right')) {
-                $rightPath = public_path('rental/car/' . $oldRight);
+                $rightPath = public_path('rental/motorcycle/' . $oldRight);
                 if (!empty($oldRight) && file_exists($rightPath)) {
                     unlink($rightPath);
                 }
 
                 $photoRight = $request->file('photo_right');
                 $photoRightFileName = $kode . '-right.' . $photoRight->extension();
-                $photoRight->move(public_path('rental/car'), $photoRightFileName);
+                $photoRight->move(public_path('rental/motorcycle'), $photoRightFileName);
                 $vehicle->photo_right = $photoRightFileName;
             }
 
             // Handle upload foto kiri
             if ($request->hasFile('photo_left')) {
-                $leftPath = public_path('rental/car/' . $oldLeft);
+                $leftPath = public_path('rental/motorcycle/' . $oldLeft);
                 if (!empty($oldLeft) && file_exists($leftPath)) {
                     unlink($leftPath);
                 }
 
                 $photoLeft = $request->file('photo_left');
                 $photoLeftFileName = $kode . '-left.' . $photoLeft->extension();
-                $photoLeft->move(public_path('rental/car'), $photoLeftFileName);
+                $photoLeft->move(public_path('rental/motorcycle'), $photoLeftFileName);
                 $vehicle->photo_left = $photoLeftFileName;
             }
 
             // Handle upload foto belakang
             if ($request->hasFile('photo_back')) {
-                $backPath = public_path('rental/car/' . $oldBack);
+                $backPath = public_path('rental/motorcycle/' . $oldBack);
                 if (!empty($oldBack) && file_exists($backPath)) {
                     unlink($backPath);
                 }
 
                 $photoBack = $request->file('photo_back');
                 $photoBackFileName = $kode . '-back.' . $photoBack->extension();
-                $photoBack->move(public_path('rental/car'), $photoBackFileName);
+                $photoBack->move(public_path('rental/motorcycle'), $photoBackFileName);
                 $vehicle->photo_back = $photoBackFileName;
             }
 
@@ -283,7 +264,7 @@ class TransportationsRentalDetailController extends Controller
 
             $vehicle->save();
 
-            return redirect()->route('transportationsRental.index')->with('message_update', 'Data berhasil diperbarui');
+            return redirect()->route('transportationsRentalMotorcycle.index')->with('message_update', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -294,12 +275,12 @@ class TransportationsRentalDetailController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
+       // try {
             $data = TransportationsRentalDetail::findOrFail($id);
-            $photoFrontFileName = public_path('rental/car/' . $data->photo_front);
-            $photoRightFileName = public_path('rental/car/' . $data->photo_right);
-            $photoLeftFileName = public_path('rental/car/' . $data->photo_left);
-            $photoBackFileName = public_path('rental/car/' . $data->photo_back);
+            $photoFrontFileName = public_path('rental/motorcycle/' . $data->photo_front);
+            $photoRightFileName = public_path('rental/motorcycle/' . $data->photo_right);
+            $photoLeftFileName = public_path('rental/motorcycle/' . $data->photo_left);
+            $photoBackFileName = public_path('rental/motorcycle/' . $data->photo_back);
 
             if (!empty($data->photo_front) && file_exists($photoFrontFileName)) {
                 unlink($photoFrontFileName);
@@ -319,8 +300,8 @@ class TransportationsRentalDetailController extends Controller
 
             $data->delete();
             return back()->with('message_delete', 'Data Berhasil dihapus');
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             return back()->with('error_message', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
-        }
+        }*/
     }
 }

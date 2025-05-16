@@ -33,7 +33,7 @@ return new class extends Migration
             $table->integer('userId');
             $table->timestamps();
 
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
+            //$table->foreign('email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 

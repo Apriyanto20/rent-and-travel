@@ -99,14 +99,14 @@ class MemberController extends Controller
         ];
         Members::create($data);
 
-        /*$dataUser = [
+        $dataUser = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('nik')),
             'role' => 'M',
         ];
 
-        User::create($dataUser);*/
+        User::create($dataUser);
 
         return redirect()
             ->route('members.index')

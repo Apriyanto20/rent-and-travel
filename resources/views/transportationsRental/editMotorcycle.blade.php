@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Input Transportasi Rental') }}
+            {{ __('Edit Transportasi Rental') }}
         </h2>
     </x-slot>
 
@@ -12,13 +12,14 @@
                     <div class="flex items-center gap-3">
                         <div class="w-12"><img src="{{ url('/assets/img/form.png') }}" alt="" srcset="">
                         </div>
-                        <div class="font-bold text-xl">Form Input Transportasi Rental</div>
+                        <div class="font-bold text-xl">Form Edit Transportasi Rental</div>
                     </div>
                     <hr class="mb-4 mt-3 border-2 rounded-xl">
                     <div>
-                        <form action="{{ route('transportationsRental.store') }}" method="post"
-                            id="transportationsRentalForm" enctype="multipart/form-data">
+                        <form action="{{ route('transportationsRentalMotorcycle.update', $transportationsRental->id) }}"
+                            method="post" id="transportationsRentalForm" enctype="multipart/form-data">
                             @csrf
+                            @method('PATCH')
                             <div class="border border-gray-100 px-6 pt-4 rounded-3xl mb-4">
                                 <div class="text-xl font-bold">Identitas Kendaraan</div>
                                 <hr class="mb-4 w-32">
@@ -32,7 +33,8 @@
                                         <input type="text" id="codeTransportation" name="codeTransportation"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Kode Detail Transportasi ....."
-                                            oninput="this.value = this.value.toUpperCase();" value="TP00001">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->codeTransportation }}">
                                         <p id="error-codeDetailTransportation" class="mt-2 text-sm text-red-500 hidden">
                                             Kode Detail Transportasi wajib
                                             diisi.</p>
@@ -48,7 +50,7 @@
                                             class="w-full border border-gray-300 rounded-3xl px-4 bg-gray-100"
                                             placeholder="Kode Detail Transportasi ....."
                                             oninput="this.value = this.value.toUpperCase();"
-                                            value="{{ $codeRentalMobil }}" readonly>
+                                            value="{{ $transportationsRental->codeDetailTransportation }}" readonly>
                                         <p id="error-codeDetailTransportation" class="mt-2 text-sm text-red-500 hidden">
                                             Kode Detail Transportasi wajib
                                             diisi.</p>
@@ -64,7 +66,10 @@
                                             id="codeMerk" name="codeMerk" data-placeholder="Merk">
                                             <option value="">Pilih...</option>
                                             @foreach ($merk as $m)
-                                                <option value="{{ $m->codeMerk }}">{{ $m->merk }}</option>
+                                                <option value="{{ $m->codeMerk }}"
+                                                    {{ $transportationsRental->codeMerk == $m->codeMerk ? 'selected' : '' }}>
+                                                    {{ $m->merk }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <p id="error-codeMerk" class="mt-2 text-sm text-red-500 hidden">Merk wajib
@@ -79,7 +84,8 @@
                                         <input type="text" name="license_plate" id="license_plate"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Nomor Polisi ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->license_plate }}">
                                         <p id="error-license_plate" class="mt-2 text-sm text-red-500 hidden">Nomor
                                             Polisi
                                             wajib
@@ -93,7 +99,7 @@
                                         </div>
                                         <input type="text" name="model" id="model"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
-                                            placeholder="Model .....">
+                                            placeholder="Model ....." value="{{ $transportationsRental->model }}">
                                         <p id="error-model" class="mt-2 text-sm text-red-500 hidden">Model wajib
                                             diisi.</p>
                                     </div>
@@ -108,7 +114,8 @@
                                         <input type="text" name="chassis_number" id="chassis_number"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Nomor Rangka Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->chassis_number }}">
                                         <p id="error-chassis_number" class="mt-2 text-sm text-red-500 hidden">Nomor
                                             Rangka Kendaraan
                                             wajib
@@ -123,7 +130,8 @@
                                         <input type="text" name="engine_number" id="engine_number"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Nomor Mesin Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->engine_number }}">
                                         <p id="error-engine_number" class="mt-2 text-sm text-red-500 hidden">Nomor
                                             Mesin Kendaraan
                                             wajib
@@ -143,8 +151,8 @@
                                         </div>
                                         <input type="text" name="color" id="color"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
-                                            placeholder="Warna ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            placeholder="Warna ....." oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->color }}">
                                         <p id="error-color" class="mt-2 text-sm text-red-500 hidden">
                                             Warna
                                             wajib
@@ -159,7 +167,8 @@
                                         <input type="number" name="seats" id="seats"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Jumlah Kursi ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->seats }}">
                                         <p id="error-seats" class="mt-2 text-sm text-red-500 hidden">Jumlah Kursi
                                             wajib
                                             diisi.</p>
@@ -173,7 +182,8 @@
                                         <input type="text" name="production_year" id="production_year"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Tahun Produksi Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->production_year }}">
                                         <p id="error-production_year" class="mt-2 text-sm text-red-500 hidden">
                                             Tahun Produksi Kendaraan
                                             wajib
@@ -188,7 +198,8 @@
                                         <input type="text" name="engine_capacity" id="engine_capacity"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Kapasitas Mesin ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->engine_capacity }}">
                                         <p id="error-engine_capacity" class="mt-2 text-sm text-red-500 hidden">
                                             Kapasitas Mesin
                                             wajib
@@ -203,7 +214,8 @@
                                         <input type="text" name="fuel_type" id="fuel_type"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Bahan Bakar ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->fuel_type }}">
                                         <p id="error-fuel_type" class="mt-2 text-sm text-red-500 hidden">
                                             Bahan Bakar
                                             wajib
@@ -218,7 +230,8 @@
                                         <input type="text" name="transmission" id="transmission"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Jenis Transmisi ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->transmission }}">
                                         <p id="error-transmission" class="mt-2 text-sm text-red-500 hidden">
                                             Jenis Transmisi
                                             wajib
@@ -239,7 +252,8 @@
                                         <input type="text" name="vehicle_statuses" id="vehicle_statuses"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Status Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->vehicle_statuses }}">
                                         <p id="error-vehicle_statuses" class="mt-2 text-sm text-red-500 hidden">Status
                                             Kendaraan wajib
                                             diisi.</p>
@@ -253,7 +267,8 @@
                                         <input type="text" name="ownership_status" id="ownership_status"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Status Kepemilikan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->ownership_status }}">
                                         <p id="error-ownership_status" class="mt-2 text-sm text-red-500 hidden">Status
                                             Kepemilikan
                                             wajib
@@ -268,7 +283,8 @@
                                         <input type="date" name="registration_date" id="registration_date"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Tanggal Registrasi Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->registration_date }}">
                                         <p id="error-registration_date" class="mt-2 text-sm text-red-500 hidden">
                                             Tanggal Registrasi Kendaraan
                                             wajib
@@ -283,7 +299,8 @@
                                         <input type="text" name="tax_validity_date" id="tax_validity_date"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Masa Berlaku Pajak Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->tax_validity_date }}">
                                         <p id="error-tax_validity_date" class="mt-2 text-sm text-red-500 hidden">Masa
                                             Berlaku Pajak Kendaraan
                                             wajib
@@ -298,7 +315,8 @@
                                         <input type="text" name="vehicle_condition" id="vehicle_condition"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Kondisi Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->vehicle_condition }}">
                                         <p id="error-vehicle_condition" class="mt-2 text-sm text-red-500 hidden">
                                             Kondisi Kendaraan
                                             wajib
@@ -313,7 +331,8 @@
                                         <input type="text" name="insurance_status" id="insurance_status"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Status Asuransi ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->insurance_status }}">
                                         <p id="error-insurance_status" class="mt-2 text-sm text-red-500 hidden">Status
                                             Asuransi
                                             wajib
@@ -328,7 +347,8 @@
                                         <input type="text" name="location" id="location"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Lokasi Kendaraan ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->location }}">
                                         <p id="error-location" class="mt-2 text-sm text-red-500 hidden">Lokasi
                                             Kendaraan
                                             wajib
@@ -345,16 +365,14 @@
                                                     class="w-full border border-gray-300 rounded-3xl px-4 bg-gray-100"
                                                     value="Rp" disabled></div>
                                             <div class="w-full">
-                                                <input type="text" id="formatted_prices" data-target="prices"
+                                                <input type="text" id="formatted_prices"
                                                     class="w-full border border-gray-300 rounded-3xl px-4"
-                                                    placeholder="Harga ....." oninput="formatRupiah(this)">
-
-                                                <input type="hidden" id="rental_price" name="rental_price">
+                                                    placeholder="Harga ....." oninput="formatRupiah(this)"
+                                                    value="{{ number_format($transportationsRental->rental_price, 0, ',', '.') }}">
+                                                <input type="hidden" name="rental_price" id="rental_price"
+                                                    value="{{ $transportationsRental->rental_price }}">
                                             </div>
                                         </div>
-                                        <p id="error-prices" class="mt-2 text-sm text-red-500 hidden">Harga Sewa
-                                            wajib
-                                            diisi.</p>
                                     </div>
                                 </div>
                             </div>
@@ -363,63 +381,87 @@
                                 <hr class="mb-4 w-36">
                                 <div class="grid grid-cols-4 gap-5">
 
-                                    <div class="mb-5">
+                                    <div class="">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                             <i class="fi fi-rr-briefcase flex"></i> <span>Foto Depan<span
                                                     class="text-red-500">*</span></span>
                                         </div>
-                                        <input type="file" name="photo_front" id="photo_front"
+                                        <input type="file" name="photo_front"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Foto Depan ....."
                                             oninput="this.value = this.value.toUpperCase();">
-                                        <p id="error-photo_front" class="mt-2 text-sm text-red-500 hidden">Foto Depan
-                                            Bekerja wajib
-                                            diisi.</p>
                                     </div>
-                                    <div class="mb-5">
+                                    <div class="">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                             <i class="fi fi-rr-briefcase flex"></i> <span>Foto Kanan<span
                                                     class="text-red-500">*</span></span>
                                         </div>
-                                        <input type="file" name="photo_right" id="photo_right"
+                                        <input type="file" name="photo_right"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Foto Kanan ....."
                                             oninput="this.value = this.value.toUpperCase();">
-                                        <p id="error-photo_right" class="mt-2 text-sm text-red-500 hidden">Foto Kanan
-                                            Bekerja wajib
-                                            diisi.</p>
                                     </div>
-                                    <div class="mb-5">
+                                    <div class="">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                             <i class="fi fi-rr-briefcase flex"></i> <span>Foto Kiri<span
                                                     class="text-red-500">*</span></span>
                                         </div>
-                                        <input type="file" name="photo_left" id="photo_left"
+                                        <input type="file" name="photo_left"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Foto Kiri ....."
                                             oninput="this.value = this.value.toUpperCase();">
-                                        <p id="error-photo_left" class="mt-2 text-sm text-red-500 hidden">Foto Kiri
-                                            Bekerja wajib
-                                            diisi.</p>
                                     </div>
-                                    <div class="mb-5">
+                                    <div class="">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                             <i class="fi fi-rr-briefcase flex"></i> <span>Foto Belakang<span
                                                     class="text-red-500">*</span></span>
                                         </div>
-                                        <input type="file" name="photo_back" id="photo_back"
+                                        <input type="file" name="photo_back"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Foto Belakang ....."
                                             oninput="this.value = this.value.toUpperCase();">
-                                        <p id="error-photo_back" class="mt-2 text-sm text-red-500 hidden">Foto
-                                            Belakang
-                                            Bekerja wajib
-                                            diisi.</p>
                                     </div>
+                                    <div class="mb-5">
+                                        <div
+                                            class="mb-1 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
+                                            <i class="fi fi-rr-user flex"></i> <span>Foto Depan</span>
+                                        </div>
+                                        <img src="{{ url('/rental/motorcycle/', $transportationsRental->photo_front) }}"
+                                            alt="{{ $transportationsRental->photo_front }}"
+                                            class="w-48 max-w-full rounded-lg object-contain border p-4 border-gray-200 shadow-sm">
+                                    </div>
+                                    <div class="mb-5">
+                                        <div
+                                            class="mb-1 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
+                                            <i class="fi fi-rr-user flex"></i> <span>Foto Kanan</span>
+                                        </div>
+                                        <img src="{{ url('/rental/motorcycle/', $transportationsRental->photo_right) }}"
+                                            alt="{{ $transportationsRental->photo_right }}"
+                                            class="w-48 max-w-full rounded-lg object-contain border p-4 border-gray-200 shadow-sm">
+                                    </div>
+                                    <div class="mb-5">
+                                        <div
+                                            class="mb-1 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
+                                            <i class="fi fi-rr-user flex"></i> <span>Foto Kiri</span>
+                                        </div>
+                                        <img src="{{ url('/rental/motorcycle/', $transportationsRental->photo_left) }}"
+                                            alt="{{ $transportationsRental->photo_left }}"
+                                            class="w-48 max-w-full rounded-lg object-contain border p-4 border-gray-200 shadow-sm">
+                                    </div>
+                                    <div class="mb-5">
+                                        <div
+                                            class="mb-1 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
+                                            <i class="fi fi-rr-user flex"></i> <span>Foto Belakang</span>
+                                        </div>
+                                        <img src="{{ url('/rental/motorcycle/', $transportationsRental->photo_back) }}"
+                                            alt="{{ $transportationsRental->photo_back }}"
+                                            class="w-48 max-w-full rounded-lg object-contain border p-4 border-gray-200 shadow-sm">
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="border border-gray-100 px-6 pt-4 rounded-3xl mb-4">
@@ -434,8 +476,8 @@
                                         </div>
                                         <input type="text" name="notes" id="notes"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
-                                            placeholder="Notes ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            placeholder="Notes ....." oninput="this.value = this.value.toUpperCase();"
+                                            value="{{ $transportationsRental->notes }}">
                                         <p id="error-notes" class="mt-2 text-sm text-red-500 hidden">Catatan Terkait
                                             Pekerjaan
                                             wajib
@@ -472,7 +514,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         const form = document.getElementById('transportationsRentalForm');
 
         form.addEventListener('submit', function(e) {
@@ -497,6 +539,6 @@
                 form.submit();
             }
         });
-    </script>
+    </script> --}}
 
 </x-app-layout>

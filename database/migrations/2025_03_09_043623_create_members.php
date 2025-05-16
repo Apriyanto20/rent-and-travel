@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('nik')->unique();
             $table->string('name');
-            $table->string('phoneNumber');
+            $table->string('phoneNumber')->nullable();
             $table->string('email');
-            $table->text('address');
-            $table->date('dateOfBirth');
-            $table->string('gender');
-            $table->string('photo');
-            $table->string('photoKtp');
+            $table->text('address')->nullable();
+            $table->date('dateOfBirth')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('photoKtp')->nullable();
             $table->timestamps();
 
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
+            //$table->foreign('email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 

@@ -25,9 +25,9 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->foreign('codeSchedule')->references('codeSchedule')->on('schedule_travel')->onDelete('cascade');
+            /*$table->foreign('codeSchedule')->references('codeSchedule')->on('schedule_travel')->onDelete('cascade');
             $table->foreign('seat_code')->references('seat_code')->on('detail_seat')->onDelete('cascade');
-            $table->foreign('nik')->references('nik')->on('members')->onDelete('cascade');
+            $table->foreign('nik')->references('nik')->on('members')->onDelete('cascade');*/
         });
     }
 

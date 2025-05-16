@@ -40,6 +40,24 @@ class TransportationsRentalDetail extends Model
 
     protected $table = 'transportations_rental_detail';
 
+    public static function codeRentalMobil()
+    {
+        $latestRecord = self::orderByRaw("CAST(SUBSTRING(codeDetailTransportation, 3, LENGTH(codeDetailTransportation) - 2) AS UNSIGNED) DESC")->first();
+        $latestCodeNumber = optional($latestRecord)->codeDetailTransportation;
+        $nextCodeNumber = $latestCodeNumber ? intval(substr($latestCodeNumber, 2)) + 1 : 1;
+        return 'TC' . str_pad($nextCodeNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    public static function codeRentalMotor()
+    {
+        $latestRecord = self::orderByRaw("CAST(SUBSTRING(codeDetailTransportation, 3, LENGTH(codeDetailTransportation) - 2) AS UNSIGNED) DESC")->first();
+        $latestCodeNumber = optional($latestRecord)->codeDetailTransportation;
+        $nextCodeNumber = $latestCodeNumber ? intval(substr($latestCodeNumber, 2)) + 1 : 1;
+        return 'TM' . str_pad($nextCodeNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    //===============================================================//
+
     public static function createCodeBus()
     {
         $latestRecord = self::orderByRaw("CAST(SUBSTRING(codeDetailTransportation, 3, LENGTH(codeDetailTransportation) - 2) AS UNSIGNED) DESC")->first();

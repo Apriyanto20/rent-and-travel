@@ -17,7 +17,7 @@
                             <div class="font-bold text-xl">Transportasi Rental</div>
                         </div>
                         <div class="flex items-center">
-                            <a href="{{ route('transportationsRental.create') }}"
+                            <a href="{{ route('transportationsRentalMotorcycle.create') }}"
                                 class="border border-sky-500 text-sky-500 px-6 py-2 font-bold rounded-xl hover:bg-sky-100"><i
                                     class="fi fi-rr-add mr-1"></i> <span>Tambah Transportasi</span></a>
                         </div>
@@ -28,12 +28,12 @@
                             <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
                                 <div class="md:mt-0 sm:flex sm:space-x-4 w-full">
                                     <!-- Form untuk entries -->
-                                    <x-show-entries :route="route('transportationsRental.index')" :search="request()->search">
+                                    <x-show-entries :route="route('transportationsRentalMotorcycle.index')" :search="request()->search">
                                     </x-show-entries>
                                 </div>
 
                                 <div class="sm:ml-16 sm:mt-0 sm:flex sm:space-x-4 sm:flex-none">
-                                    <form action="{{ route('transportationsRental.index') }}" method="GET"
+                                    <form action="{{ route('transportationsRentalMotorcycle.index') }}" method="GET"
                                         class="flex items-center flex-1">
                                         <input type="text" name="search" placeholder="Enter for search . . . "
                                             id="search" value="{{ request('search') }}"
@@ -78,14 +78,14 @@
                                                     <td class="px-3 py-2 text-center bg-gray-100">{{ $i->location }}
                                                     </td>
                                                     <td class="px-3 py-2 text-center">
-                                                        <a href="{{ route('transportationsRental.edit', $i->codeDetailTransportation) }}"
+                                                        <a href="{{ route('transportationsRentalMotorcycle.edit', $i->codeDetailTransportation) }}"
                                                             class="border border-amber-500 text-amber-500 hover:bg-amber-100 flex items-center justify-center rounded-xl h-10 w-10 text-md">
                                                             <i class="fi fi-rr-file-edit mt-1"></i>
                                                         </a>
-                                                        <button
-                                                            onclick="return dataDelete('{{ $i->id }}','{{ $i->merk }}')"
-                                                            class="border border-red-500 text-red-500 hover:bg-red-100 px-3 pt-1 rounded-xl h-10 w-10 text-md"><i
-                                                                class="fi fi-rr-trash"></i></button>
+                                                        <button type="button" onclick="return dataDelete('{{ $i->id_motor }}')"
+                                                            class="border border-red-500 text-red-500 hover:bg-red-100 px-3 pt-1 rounded-xl h-10 w-10 text-md">
+                                                            <i class="fi fi-rr-trash"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @empty
@@ -134,7 +134,7 @@
         </div>
     </div>
     <script>
-        const dataDelete = async (id, pukul) => {
+        const dataDelete = async (id) => {
             Swal.fire({
                 title: `Apakah Anda yakin?`,
                 text: `Data akan dihapus secara permanen!`,
@@ -142,11 +142,11 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
+                confirmButtonText: `Ya, hapus!`,
                 cancelButtonText: 'Batal'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await axios.post(`/transportationsRental/${id}`, {
+                    await axios.post(`/transportationsRentalMotorcycle/${id}`, {
                             '_method': 'DELETE',
                             '_token': $('meta[name="csrf-token"]').attr('content')
                         })

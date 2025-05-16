@@ -11,6 +11,7 @@ use App\Http\Controllers\TransactionsRentalController;
 use App\Http\Controllers\TransactionsTravelController;
 use App\Http\Controllers\TransportationsController;
 use App\Http\Controllers\TransportationsRentalDetailController;
+use App\Http\Controllers\TransportationsRentalMotorcyleController;
 use App\Http\Controllers\TransportationsRouteController;
 use App\Http\Controllers\TransportationsTravelDetailController;
 use App\Models\TransactionsRental;
@@ -50,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('transportationRoutes', TransportationsRouteController::class);
 
     Route::resource('transportationsRental', TransportationsRentalDetailController::class);
+    Route::resource('transportationsRentalMotorcycle', TransportationsRentalMotorcyleController::class);
     Route::resource('detailSeat', DetailSeatController::class);
     Route::resource('trasnportationsTravel', TransportationsTravelDetailController::class);
     Route::resource('scheduleTravel', ScheduleTravelController::class);

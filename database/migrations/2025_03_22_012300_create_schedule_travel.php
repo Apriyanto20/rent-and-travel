@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('codeDetailTransportation');
             $table->timestamps();
 
-            $table->foreign('codeRoute')->references('codeRoute')->on('transportation_route')->onDelete('cascade');
-            $table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_travel_detail')->onDelete('cascade');
+            /*$table->foreign('codeRoute')->references('codeRoute')->on('transportation_route')->onDelete('cascade');
+            $table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_travel_detail')->onDelete('cascade');*/
         });
     }
 

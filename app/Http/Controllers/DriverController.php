@@ -54,79 +54,79 @@ class DriverController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-        // try {
-        $kode = date('YmdHis');
+        try {
+            $kode = date('YmdHis');
 
-        $user = User::where('email', $request->input('email'))->first();
+            $user = User::where('email', $request->input('email'))->first();
 
-        if (!$user) {
-            $user = User::create([
+            if (!$user) {
+                $user = User::create([
+                    'name' => $request->input('name'),
+                    'email' => $request->input('email'),
+                    'password' => $request->input('nik'),
+                    'role' => 'D'
+                ]);
+            }
+
+            // Proses upload photo
+            if ($request->hasFile('photo')) {
+                $photoFile = $request->file('photo');
+                $photoFileName = $kode . '-photo.' . $photoFile->extension();
+                $photoFilePath = $photoFile->move(public_path('driver/img'), $photoFileName);
+                $photoFilePath = 'driver/img/' . $photoFileName;
+            } else {
+                return redirect()->back()->with('error', 'Foto tidak ditemukan');
+            }
+
+            // Proses upload photoKtp
+            if ($request->hasFile('photoKtp')) {
+                $photoKtpFile = $request->file('photoKtp');
+                $photoKtpFileName = $kode . '-photoKtp.' . $photoKtpFile->extension();
+                $photoKtpFilePath = $photoKtpFile->move(public_path('driver/ktp'), $photoKtpFileName);
+                $photoKtpFilePath = 'driver/ktp/' . $photoKtpFileName;
+            } else {
+                return redirect()->back()->with('error', 'Foto KTP tidak ditemukan');
+            }
+
+            // Data yang akan disimpan
+            $data = [
+                'nik' => $request->input('nik'),
+                'name' => $request->input('name'),
+                'driverLicenseNumber' => $request->input('driverLicenseNumber'),
+                'licenseType' => $request->input('licenseType'),
+                'licenseValidityDate' => $request->input('licenseValidityDate'),
+                'address' => $request->input('address'),
+                'phoneNumber' => $request->input('phoneNumber'),
+                'email' => $request->input('email'),
+                'dateOfBirth' => $request->input('dateOfBirth'),
+                'status' => $request->input('status'),
+                'workExperience' => $request->input('workExperience'),
+                'startDate' => $request->input('startDate'),
+                'maritalStatus' => $request->input('materialStatus'),
+                'photo' => $photoFileName,
+                'photoKtp' => $photoKtpFileName,
+                'notes' => $request->input('notes'),
+                'prices' => $request->input('prices'),
+                'userId' => Auth::user()->id,
+            ];
+
+            Drivers::create($data);
+
+            $dataUser = [
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
-                'password' => $request->input('nik'),
-                'role' => 'D'
-            ]);
-        }
+                'password' => Hash::make($request->input('nik')),
+                'role' => 'D',
+            ];
 
-        // Proses upload photo
-        if ($request->hasFile('photo')) {
-            $photoFile = $request->file('photo');
-            $photoFileName = $kode . '-photo.' . $photoFile->extension();
-            $photoFilePath = $photoFile->move(public_path('driver/img'), $photoFileName);
-            $photoFilePath = 'driver/img/' . $photoFileName;
-        } else {
-            return redirect()->back()->with('error', 'Foto tidak ditemukan');
-        }
+            User::create($dataUser);
 
-        // Proses upload photoKtp
-        if ($request->hasFile('photoKtp')) {
-            $photoKtpFile = $request->file('photoKtp');
-            $photoKtpFileName = $kode . '-photoKtp.' . $photoKtpFile->extension();
-            $photoKtpFilePath = $photoKtpFile->move(public_path('driver/ktp'), $photoKtpFileName);
-            $photoKtpFilePath = 'driver/ktp/' . $photoKtpFileName;
-        } else {
-            return redirect()->back()->with('error', 'Foto KTP tidak ditemukan');
-        }
-
-        // Data yang akan disimpan
-        $data = [
-            'nik' => $request->input('nik'),
-            'name' => $request->input('name'),
-            'driverLicenseNumber' => $request->input('driverLicenseNumber'),
-            'licenseType' => $request->input('licenseType'),
-            'licenseValidityDate' => $request->input('licenseValidityDate'),
-            'address' => $request->input('address'),
-            'phoneNumber' => $request->input('phoneNumber'),
-            'email' => $request->input('email'),
-            'dateOfBirth' => $request->input('dateOfBirth'),
-            'status' => $request->input('status'),
-            'workExperience' => $request->input('workExperience'),
-            'startDate' => $request->input('startDate'),
-            'maritalStatus' => $request->input('materialStatus'),
-            'photo' => $photoFileName,
-            'photoKtp' => $photoKtpFileName,
-            'notes' => $request->input('notes'),
-            'prices' => $request->input('prices'),
-            'userId' => Auth::user()->id,
-        ];
-
-        Drivers::create($data);
-
-       /* $dataUser = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('nik')),
-            'role' => 'D',
-        ];
-
-        User::create($dataUser);*/
-
-        return redirect()
-            ->route('drivers.index')
-            ->with('message_insert', 'Data Berhasil ditambahkan');
-        /*} catch (\Exception $e) {
+            return redirect()
+                ->route('drivers.index')
+                ->with('message_insert', 'Data Berhasil ditambahkan');
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
-        }*/
+        }
     }
 
     /**

@@ -39,12 +39,12 @@ return new class extends Migration
             $table->string('photo_left')->nullable();
             $table->string('photo_back')->nullable();
             $table->text('notes')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_id');
             $table->timestamps();
 
-            $table->foreign('codeTransportation')->references('codeTransportation')->on('transportations')->onDelete('cascade');
+            /*$table->foreign('codeTransportation')->references('codeTransportation')->on('transportations')->onDelete('cascade');
             $table->foreign('codeMerk')->references('codeMerk')->on('merk')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');*/
         });
     }
 

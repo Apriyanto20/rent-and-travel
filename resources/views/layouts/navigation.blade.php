@@ -98,6 +98,14 @@
                                     <div
                                         class="text-[16px] font-bold tracking-wide {{ request()->routeIs('dashboard') || request()->routeIs('dashboard') ? 'text-black' : '' }}">
                                         Rental</div>
+                                    <div class="ms-1">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
                                 </button>
                             </x-slot>
 
@@ -115,15 +123,17 @@
 
                                     <div id="transportasi-submenu"
                                         class="hidden absolute left-full top-0 -mt-1 ml-2 w-52 bg-white dark:bg-gray-800 shadow-lg rounded-md border z-50">
-                                        <x-dropdown-link :href="route('transportationsRental.index')"
-                                            :class="request()->routeIs('transportationsRental.index') ? 'text-gray-500 font-bold' : ''">
+                                        <x-dropdown-link :href="route('transportationsRental.index')" :class="request()->routeIs('transportationsRental.index')
+                                            ? 'text-gray-500 font-bold'
+                                            : ''">
                                             <div class="flex items-center justify-start gap-5">
                                                 <div class="mt-1"><i class="fi fi-ss-truck-side"></i></div>
                                                 <div>Mobil</div>
                                             </div>
                                         </x-dropdown-link>
-                                        <x-dropdown-link :href="route('transportationsRental.index')"
-                                            :class="request()->routeIs('transportationsRental.index') ? 'text-gray-500 font-bold' : ''">
+                                        <x-dropdown-link :href="route('transportationsRentalMotorcycle.index')" :class="request()->routeIs('transportationsRentalMotorcycle.index')
+                                            ? 'text-gray-500 font-bold'
+                                            : ''">
                                             <div class="flex items-center justify-start gap-5">
                                                 <div class="mt-1"><i class="fi fi-ss-moped"></i></div>
                                                 <div>Motor</div>
@@ -135,10 +145,9 @@
                                 <hr>
 
                                 {{-- Transaction --}}
-                                <x-dropdown-link :href="route('merks.index')"
-                                    :class="request()->routeIs('merks.index') ? 'text-gray-500 font-bold' : ''">
+                                <x-dropdown-link :href="route('merks.index')" :class="request()->routeIs('merks.index') ? 'text-gray-500 font-bold' : ''">
                                     <div class="flex items-center justify-start gap-5">
-                                        <div class="mt-1"><i class="fi fi-brands-slack"></i></div>
+                                        <div class="mt-1"><i class="fi fi-ss-receipt"></i></div>
                                         <div>Transaction</div>
                                     </div>
                                 </x-dropdown-link>
@@ -255,26 +264,26 @@
     </div>
 </nav>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const transportasiButton = document.getElementById('transportasi-button');
         const transportasiSubmenu = document.getElementById('transportasi-submenu');
 
         // Toggle submenu on click
-        transportasiButton.addEventListener('click', function (e) {
+        transportasiButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             transportasiSubmenu.classList.toggle('hidden');
         });
 
         // Hide when clicking outside
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (!transportasiButton.contains(e.target) && !transportasiSubmenu.contains(e.target)) {
                 transportasiSubmenu.classList.add('hidden');
             }
         });
 
         // Prevent submenu from closing when clicked inside
-        transportasiSubmenu.addEventListener('click', function (e) {
+        transportasiSubmenu.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     });

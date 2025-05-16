@@ -28,10 +28,10 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->foreign('memberCode')->references('nik')->on('members')->onDelete('cascade');
+            /*$table->foreign('memberCode')->references('nik')->on('members')->onDelete('cascade');
             $table->foreign('codeRentalOption')->references('codeRentalOption')->on('rental_options')->onDelete('cascade');
             $table->foreign('codeDetailTransportation')->references('codeDetailTransportation')->on('transportations_rental_detail')->onDelete('cascade');
-            $table->foreign('driverCode')->references('nik')->on('drivers')->onDelete('cascade');
+            $table->foreign('driverCode')->references('nik')->on('drivers')->onDelete('cascade');*/
         });
     }
 

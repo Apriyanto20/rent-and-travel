@@ -16,7 +16,7 @@
                     </div>
                     <hr class="mb-4 mt-3 border-2 rounded-xl">
                     <div>
-                        <form action="{{ route('transportationsRental.store') }}" method="post"
+                        <form action="{{ route('transportationsRentalMotorcycle.store') }}" method="post"
                             id="transportationsRentalForm" enctype="multipart/form-data">
                             @csrf
                             <div class="border border-gray-100 px-6 pt-4 rounded-3xl mb-4">
@@ -32,7 +32,7 @@
                                         <input type="text" id="codeTransportation" name="codeTransportation"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Kode Detail Transportasi ....."
-                                            oninput="this.value = this.value.toUpperCase();" value="TP00001">
+                                            oninput="this.value = this.value.toUpperCase();" value="TP00002">
                                         <p id="error-codeDetailTransportation" class="mt-2 text-sm text-red-500 hidden">
                                             Kode Detail Transportasi wajib
                                             diisi.</p>
@@ -48,7 +48,7 @@
                                             class="w-full border border-gray-300 rounded-3xl px-4 bg-gray-100"
                                             placeholder="Kode Detail Transportasi ....."
                                             oninput="this.value = this.value.toUpperCase();"
-                                            value="{{ $codeRentalMobil }}" readonly>
+                                            value="{{ $codeRentalMotor }}" readonly>
                                         <p id="error-codeDetailTransportation" class="mt-2 text-sm text-red-500 hidden">
                                             Kode Detail Transportasi wajib
                                             diisi.</p>
