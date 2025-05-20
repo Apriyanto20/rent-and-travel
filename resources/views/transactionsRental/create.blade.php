@@ -46,7 +46,7 @@
                                         <input type="number" name="memberCode" id="memberCode"
                                             class="w-full border border-gray-300 rounded-3xl px-4"
                                             placeholder="Nomor Polisi ....."
-                                            oninput="this.value = this.value.toUpperCase();">
+                                            oninput="this.value = this.value.toUpperCase();" required>
                                         <p id="error-memberCode" class="mt-2 text-sm text-red-500 hidden">Member Kode
                                             wajib
                                             diisi.</p>
@@ -59,8 +59,8 @@
                                         </div>
                                         <select
                                             class="js-example-placeholder-single js-states form-control w-full m-6 border border-gray-300 rounded-3xl px-4"
-                                            id="codeRentalOption" name="codeRentalOption"
-                                            data-placeholder="Opsi Rental">
+                                            id="codeRentalOption" name="codeRentalOption" data-placeholder="Opsi Rental"
+                                            required>
                                             <option value="">Pilih...</option>
                                             <option value="DD">DENGAN DRIVER</option>
                                             <option value="TD">TANPA DRIVER</option>
@@ -72,8 +72,7 @@
                                     <div class="mb-5 w-full">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
-                                            <i class="fi fi-rr-id-card-clip-alt flex"></i> <span>Driver<span
-                                                    class="text-red-500">*</span></span>
+                                            <i class="fi fi-rr-id-card-clip-alt flex"></i> <span>Driver</span>
                                         </div>
                                         <select
                                             class="js-example-placeholder-single js-states form-control w-full m-6 border border-gray-300 rounded-3xl px-4"
@@ -87,8 +86,7 @@
                                     <div class="mb-5">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
-                                            <i class="fi fi-rr-calendar flex"></i> <span>Pengalaman<span
-                                                    class="text-red-500">*</span></span>
+                                            <i class="fi fi-rr-calendar flex"></i> <span>Pengalaman</span>
                                         </div>
                                         <input type="text" name="workExperience" id="workExperience"
                                             class="w-full border border-gray-300 rounded-3xl px-4 bg-gray-200 text-gray-400"
@@ -100,8 +98,7 @@
                                     <div class="mb-5">
                                         <div
                                             class="mb-2 text-md font-medium text-gray-900 dark:text-white flex items-center gap-3">
-                                            <i class="fi fi-rr-calendar flex"></i> <span>Harga Driver /Hari<span
-                                                    class="text-red-500">*</span></span>
+                                            <i class="fi fi-rr-calendar flex"></i> <span>Harga Driver /Hari</span>
                                         </div>
                                         <input type="text" name="prices" id="prices"
                                             class="w-full border border-gray-300 rounded-3xl px-4 bg-gray-200 text-gray-400"
@@ -116,7 +113,7 @@
                                         </div>
                                         <input type="text" id="rentalDate" name="rentalDate"
                                             class="w-full border border-gray-300 rounded-3xl px-4 py-2"
-                                            placeholder="Pilih rentang tanggal" />
+                                            placeholder="Pilih rentang tanggal" required />
                                         <p id="error-rentalDate" class="mt-2 text-sm text-red-500 hidden">Tanggal
                                             Rental
                                             wajib
@@ -143,9 +140,8 @@
                                             <i class="fi fi-rr-id-card-clip-alt flex"></i> <span>Pembayaran<span
                                                     class="text-red-500">*</span></span>
                                         </div>
-                                        <select
-                                            class="w-full border border-gray-300 rounded-3xl px-4"
-                                            name="paymentMethod" data-placeholder="Opsi Rental">
+                                        <select class="w-full border border-gray-300 rounded-3xl px-4"
+                                            name="paymentMethod" data-placeholder="Opsi Rental" required>
                                             <option value="">Pilih...</option>
                                             <option value="TRANSFER">TRANSFER</option>
                                             <option value="E-WALLET">E-WALLET</option>
@@ -184,7 +180,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         const form = document.getElementById('transportationsRentalForm');
 
         form.addEventListener('submit', function(e) {
@@ -209,7 +205,7 @@
                 form.submit();
             }
         });
-    </script>
+    </script> --}}
 
     <script>
         $(document).ready(function() {
@@ -306,7 +302,7 @@
 
                     // Set nilai ke input hidden
                     document.getElementById('rentalStartDate').value = start.toISOString().split('T')[
-                    0];
+                        0];
                     document.getElementById('rentalEndDate').value = end.toISOString().split('T')[0];
 
                     const timeDiff = end - start;
@@ -333,5 +329,23 @@
             }
         });
     </script>
+    @push('scripts')
+        <script>
+            const refreshIfExpired = () => {
+                const rows = document.querySelectorAll('[data-expired-at]');
 
+                rows.forEach(row => {
+                    const expiredAt = new Date(row.getAttribute('data-expired-at'));
+                    const proof = row.getAttribute('data-proof');
+
+                    const now = new Date();
+                    if (now >= expiredAt && (!proof || proof === 'null')) {
+                        location.reload();
+                    }
+                });
+            };
+
+            setInterval(refreshIfExpired, 5000);
+        </script>
+    @endpush
 </x-app-layout>

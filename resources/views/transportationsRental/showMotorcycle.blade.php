@@ -165,22 +165,31 @@
                         {{ $transportationsRental->model }}</div>
                     <div class="text-sm">{{ $above }} for Rent</div>
                 </div>
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ route('transactionsRental.create.withCode', $transportationsRental->codeDetailTransportation) }}"
-                            class="w-[35%] text-end bg-sky-600 flex items-center justify-between rounded-xl px-4 py-2 text-white  font-boldx">
-                            Rp {{ $transportationsRental->rental_price }} <span
-                                class="bg-white bg-blend-multiply bg-opacity-25  w-7 h-7 pt-1 rounded-lg text-center flex items-center justify-center"><i
-                                    class="fi fi-br-arrow-right"></i></span>
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="w-[35%] text-end bg-sky-600 flex items-center justify-between rounded-xl px-4 py-2 text-white  font-boldx">
-                            Rp <span class="pr-4">{{ $transportationsRental->rental_price }}</span> <span
-                                class="bg-white bg-blend-multiply bg-opacity-25 w-7 h-7 pt-1 rounded-lg text-center flex items-center justify-center"><i
-                                    class="fi fi-br-arrow-right"></i></span>
-                        </a>
-                    @endauth
+                @if ($transportationsRental->vehicle_statuses != 'TERSEDIA')
+                    <div
+                        class="w-[35%] text-end bg-sky-600 flex items-center justify-between rounded-xl px-4 py-2 text-white  font-boldx">
+                        Rp {{ $transportationsRental->rental_price }} <span
+                            class="bg-white bg-blend-multiply bg-opacity-25  w-7 h-7 pt-1 rounded-lg text-center flex items-center justify-center"><i
+                                class="fi fi-br-arrow-right"></i></span>
+                    </div>
+                @else
+                    @if (Route::has('login'))
+                        @auth
+                            <a href="{{ route('transactionsRental.create.withCode', $transportationsRental->codeDetailTransportation) }}"
+                                class="w-[35%] text-end bg-sky-600 flex items-center justify-between rounded-xl px-4 py-2 text-white  font-boldx">
+                                Rp {{ $transportationsRental->rental_price }} <span
+                                    class="bg-white bg-blend-multiply bg-opacity-25  w-7 h-7 pt-1 rounded-lg text-center flex items-center justify-center"><i
+                                        class="fi fi-br-arrow-right"></i></span>
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="w-[35%] text-end bg-sky-600 flex items-center justify-between rounded-xl px-4 py-2 text-white  font-boldx">
+                                Rp <span class="pr-4">{{ $transportationsRental->rental_price }}</span> <span
+                                    class="bg-white bg-blend-multiply bg-opacity-25 w-7 h-7 pt-1 rounded-lg text-center flex items-center justify-center"><i
+                                        class="fi fi-br-arrow-right"></i></span>
+                            </a>
+                        @endauth
+                    @endif
                 @endif
             </div>
         </div>

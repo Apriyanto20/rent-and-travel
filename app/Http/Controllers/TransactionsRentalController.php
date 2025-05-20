@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Drivers;
 use App\Models\TransactionsRental;
 use App\Models\TransportationsRentalDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,17 +74,66 @@ class TransactionsRentalController extends Controller
 
         TransactionsRental::create($data);
 
-        $transportation = TransportationsRentalDetail::where('codeDetailTransportation', $request->input('codeDetailTransportation'))->first();
-        $transportation->vehicle_statuses = 'TIDAK TERSEDIA';
-        $transportation->save();
+        TransportationsRentalDetail::where('codeDetailTransportation', $request->input('codeDetailTransportation'))
+                ->update(['vehicle_statuses' => 'TIDAK TERSEDIA']);
 
-        $driver = Drivers::where('nik', $request->input('driver'))->first();
-        $driver->status = 'TIDAK TERSEDIA';
-        $driver->save();
+        if ($request->input('driver') > 0) {
+            $driver = Drivers::where('nik', $request->input('driver'))->first();
+            $driver->status = 'TIDAK TERSEDIA';
+            $driver->save();
+        }
 
         return redirect()
             ->route('transactionsRental.index')
             ->with('message_insert', 'Data Berhasil ditambahkan');
+    }
+
+    public function autoCancel($id)
+    {
+        $transaction = TransactionsRental::find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        if (!$transaction->proofOfPayment && now()->diffInMinutes($transaction->created_at) >= 6) {
+            $transaction->paymentStatus = 'CANCEL';
+            $transaction->rentalStatus = 'CANCEL';
+            $transaction->save();
+
+            return response()->json(['message' => 'Transaksi dibatalkan karena melebihi batas waktu.']);
+        }
+
+        return response()->json(['message' => 'Transaksi masih valid.'], 200);
+    }
+
+    public function checkExpired(Request $request)
+    {
+        $transaction = TransactionsRental::find($request->id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        $expiredAt = Carbon::parse($transaction->created_at)->addMinutes(1);
+
+        if (now()->greaterThanOrEqualTo($expiredAt) && !$transaction->proofOfPayment) {
+            $transaction->paymentStatus = 'CANCEL';
+            $transaction->rentalStatus = 'CANCEL';
+            $transaction->save();
+
+            TransportationsRentalDetail::where('codeDetailTransportation', $transaction->codeDetailTransportation)
+                ->update(['vehicle_statuses' => 'TERSEDIA']);
+
+            if ($transaction->driverCode) {
+                Drivers::where('nik', $transaction->driverCode)
+                    ->update(['status' => 'ACTIVE']);
+            }
+
+            return response()->json(['updated' => true]);
+        }
+
+        return response()->json(['updated' => false]);
     }
 
     /**

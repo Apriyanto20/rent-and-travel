@@ -25,12 +25,12 @@
                             <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
                                 <div class="md:mt-0 sm:flex sm:space-x-4 w-full">
                                     <!-- Form untuk entries -->
-                                    <x-show-entries :route="route('transportationsRental.index')" :search="request()->search">
+                                    <x-show-entries :route="route('transactionsRental.index')" :search="request()->search">
                                     </x-show-entries>
                                 </div>
 
-                                <div class="sm:ml-16 sm:mt-0 sm:flex sm:space-x-4 sm:flex-none">
-                                    <form action="{{ route('transportationsRental.index') }}" method="GET"
+                                {{-- <div class="sm:ml-16 sm:mt-0 sm:flex sm:space-x-4 sm:flex-none">
+                                    <form action="{{ route('transactionsRental.index') }}" method="GET"
                                         class="flex items-center flex-1">
                                         <input type="text" name="search" placeholder="Enter for search . . . "
                                             id="search" value="{{ request('search') }}"
@@ -40,7 +40,7 @@
                                         <input type="hidden" name="entries" value="{{ request('entries', 10) }}">
                                         <input type="hidden" name="page" value="{{ request('page', 1) }}">
                                     </form>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="relative overflow-x-auto rounded-lg shadow-lg">
                                 <div class="overflow-x-auto">
@@ -48,6 +48,8 @@
                                         <thead class="text-md font-bold text-gray-700 uppercase">
                                             <tr>
                                                 <th scope="col" class="px-3 py-2 text-center">NO</th>
+                                                <th scope="col" class="px-3 py-2 text-center bg-gray-100">WAKTU
+                                                    TRANSAKSI</th>
                                                 <th scope="col" class="px-3 py-2 text-center bg-gray-100">MEMBER KODE
                                                 </th>
                                                 <th scope="col" class="px-3 py-2 text-center bg-gray-100">MEMBER</th>
@@ -62,7 +64,7 @@
                                                     PEMBAYARAN</th>
                                                 <th scope="col" class="px-3 py-2 text-center bg-gray-100">STATUS
                                                     RENTAL</th>
-                                                <th scope="col" class="px-3 py-2 text-center bg-gray-100">QR
+                                                <th scope="col" class="px-3 py-2 text-center bg-gray-100" hidden>QR
                                                     PEMBAYARAN</th>
                                             </tr>
                                         </thead>
@@ -71,8 +73,11 @@
                                                 $no = $transactionsRental->firstItem();
                                             @endphp
                                             @forelse($transactionsRental as $i)
-                                                <tr class="bg-white border dark:bg-gray-800 dark:border-gray-700">
+                                                <tr class="bg-white border dark:bg-gray-800 dark:border-gray-700"
+                                                    data-expired-at="{{ \Carbon\Carbon::parse($i->created_at)->addMinutes(15) }}"
+                                                    data-proof="{{ $i->proofOfPayment }}">
                                                     <td class="px-3 py-2 text-center">{{ $no++ }}</td>
+                                                    <td class="px-3 py-2 text-center">{{ $i->created_at }}</td>
                                                     <td class="px-3 py-2 text-center bg-gray-100">
                                                         {{ $i->member->nik }}
                                                     </td>
@@ -96,8 +101,8 @@
                                                         {{ $i->paymentStatus }}</td>
                                                     <td class="px-3 py-2 text-center">
                                                         {{ $i->rentalStatus }}</td>
-                                                    <td class="px-3 py-2 text-center">
-                                                        <button
+                                                    <td class="px-3 py-2 text-center hidden">
+                                                        <button type="button"
                                                             onclick="pembayaran('{{ $i->id }}', '{{ $i->created_at->toIso8601String() }}', '{{ $i->proofOfPayment }}')">BAYAR</button>
                                                     </td>
                                                 </tr>
@@ -112,7 +117,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                             <div class="mt-4">
                                 @if ($transactionsRental->hasPages())
@@ -219,7 +223,7 @@
 
             const countdownElement = document.getElementById("countdown-timer");
             const createdAtDate = new Date(createdAt);
-            const endTime = new Date(createdAtDate.getTime() + 6 * 60 * 1000); // 6 menit
+            const endTime = new Date(createdAtDate.getTime() + 6 * 60 * 1000);
 
             countdownInterval = setInterval(() => {
                 const now = new Date().getTime();
@@ -333,6 +337,43 @@
                 });
             </script>
         @endif
+
+        <script>
+            const refreshIfExpired = () => {
+                const rows = document.querySelectorAll('[data-expired-at]');
+
+                rows.forEach(row => {
+                    const expiredAt = new Date(row.getAttribute('data-expired-at'));
+                    const proof = row.getAttribute('data-proof');
+                    const now = new Date();
+
+                    if (now >= expiredAt && (!proof || proof === 'null' || proof === '')) {
+                        const id = row.querySelector('button').getAttribute('onclick').match(/pembayaran\('(.+?)'/)[
+                            1];
+
+                        fetch('{{ route('transactions.checkExpired') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    id
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.updated) {
+                                    location.reload(); // reload hanya setelah status diubah
+                                }
+                            });
+                    }
+                });
+            };
+
+            setInterval(refreshIfExpired, 60000); // Cek tiap 5 detik
+        </script>
+
 
     @endpush
 </x-app-layout>

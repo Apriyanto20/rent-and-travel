@@ -65,6 +65,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactionsRental/create/{codeDetailTransportation}', [TransactionsRentalController::class, 'create'])->name('transactionsRental.create.withCode');
     Route::put('/transactions-rental/{id}', [TransactionsRentalController::class, 'updateStatus'])->name('transactionsRental.updateStatus');
     Route::put('/transactions-rental/{id}/update-pembayaran', [TransactionsRentalController::class, 'updatePembayaran'])->name('transactionsRental.updatePembayaran');
+    Route::post('/transactions-rental/{id}/auto-cancel', [TransactionsRentalController::class, 'autoCancel']);
+    Route::post('/transactions/check-expired', [TransactionsRentalController::class, 'checkExpired'])->name('transactions.checkExpired');
     Route::get('/get-driver/{nik}', function ($nik) {
         $driver = Drivers::where('nik', $nik)->first();
 

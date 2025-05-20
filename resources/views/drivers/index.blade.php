@@ -63,7 +63,7 @@
                                                 <th scope="col" class="px-3 py-2 text-center">EMAIL</th>
                                                 <th scope="col" class="px-3 py-2 text-center bg-gray-100 w-80">ALAMAT
                                                 </th>
-                                                <th scope="col" class="px-3 py-2 text-center">TANGGAL LAHIR</th>
+                                                <th scope="col" class="px-3 py-2 text-center">STATUS</th>
                                                 <th scope="col" class="px-3 py-2 text-center bg-gray-100">JENIS
                                                     KELAMIN</th>
                                                 <th scope="col" class="px-3 py-2 text-center">PROFILE</th>
@@ -89,7 +89,7 @@
                                                     <td class="px-3 py-2 bg-gray-100 text-wrap">{{ $i->address }}
                                                     </td>
                                                     <td class="px-3 py-2 text-center">
-                                                        {{ date('d-m-Y', strtotime($i->dateOfBirth)) }}</td>
+                                                        {{ $i->status }}</td>
                                                     <td class="px-3 py-2 text-center bg-gray-100">
                                                         {{ $i->gender == 'FEMALE' ? 'PEREMPUAN' : 'LAKI-LAKI' }}</td>
                                                     <td class="px-3 py-2 text-center flex items-center justify-center">
