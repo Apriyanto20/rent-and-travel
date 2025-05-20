@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             MerkSeeder::class,
             RentalOptionsSeeder::class,
             TransportationRouteSeeder::class,
-            TransportationsSeeder::class
+            TransportationsSeeder::class,
+            RentalSeeder::class
         ]);
     }
 }
