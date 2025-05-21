@@ -22,6 +22,8 @@
                                     <a href="{{ route('reportRental.create', [
                                         'paymentStatus' => request('paymentStatus') ?? '',
                                         'rentalStatus' => request('rentalStatus') ?? '',
+                                        'rentalStartDate' => request('rentalStartDate') ?? '',
+                                        'rentalEndDate' => request('rentalEndDate') ?? '',
                                     ]) }}"
                                         class="href rounded-xl flex items-center justify-center  p-2 text-sm lg:text-md hover:bg-red-100 border border-dashed border-red-500 text-red-500 pl-4 pr-4 pt-2"><i
                                             class="fi fi-sr-file-pdf mr-2 text-lg"></i> <span>Export PDF</span></a>
@@ -208,6 +210,22 @@
                         <option value="CANCEL">CANCEL</option>
                         <option value="RENTAL">RENTAL</option>
                     </select>
+                    <div class="flex gap-2 items-center">
+                        <div class=" border border-gray-300 rounded-3xl px-4 py-[9px] text-gray-400 w-24">
+                            Dari
+                        </div>
+                        <div class="w-full">
+                            <input type="date" id="rentalStartDate" name="rentalStartDate" class="w-full border border-gray-300 rounded-3xl px-4 text-gray-400">
+                        </div>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <div class="border border-gray-300 rounded-3xl px-4 py-[9px] text-gray-400 w-24">
+                            Sampai
+                        </div>
+                        <div class="w-full">
+                            <input type="date" id="rentalEndDate" name="rentalEndDate" class="w-full border border-gray-300 rounded-3xl px-4 text-gray-400">
+                        </div>
+                    </div>
                 </div>
             `;
             initializeSelect2();

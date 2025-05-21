@@ -11,6 +11,8 @@
 </head>
 <body>
     <h3>Laporan Transaksi Rental</h3>
+    <p>Periode: {{ $rentalStartDate }} s/d {{ $rentalEndDate }}</p>
+
     <table>
         <thead>
             <tr>

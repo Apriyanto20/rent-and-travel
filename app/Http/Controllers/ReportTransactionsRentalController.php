@@ -21,9 +21,10 @@ class ReportTransactionsRentalController extends Controller
         $search = request()->input('search');
         $rentalStatus = request()->input('rentalStatus');
         $paymentStatus = request()->input('paymentStatus');
+        $rentalStartDate = request()->input('rentalStartDate');
+        $rentalEndDate = request()->input('rentalEndDate');
 
-        // Cek apakah ada filter
-        $hasFilter = $search || $rentalStatus || $paymentStatus;
+        $hasFilter = $search || $rentalStatus || $paymentStatus || $rentalStartDate || $rentalEndDate;
 
         if ($hasFilter) {
             $query = TransactionsRental::with(['member', 'transportationRental.transportation', 'transportationRental.merk'])
@@ -36,11 +37,15 @@ class ReportTransactionsRentalController extends Controller
             }
 
             if ($rentalStatus) {
-                $query->where('rentalStatus', 'CANCEL');
+                $query->where('rentalStatus', $rentalStatus);
             }
 
             if ($paymentStatus) {
                 $query->where('paymentStatus', $paymentStatus);
+            }
+
+            if ($rentalStartDate && $rentalEndDate) {
+                $query->whereBetween('rentalStartDate', [$rentalStartDate, $rentalEndDate]);
             }
 
             $transactionsRental = $query->paginate($entries);
@@ -61,7 +66,7 @@ class ReportTransactionsRentalController extends Controller
         $paymentStatus = $request->paymentStatus;
         $rentalStatus = $request->rentalStatus;
 
-        $data = [ // Data yang akan dipakai di view
+        $data = [
             'paymentStatus' => $paymentStatus,
             'rentalStatus' => $rentalStatus,
         ];
@@ -74,9 +79,11 @@ class ReportTransactionsRentalController extends Controller
     {
         $paymentStatus = $request->paymentStatus;
         $rentalStatus = $request->rentalStatus;
+        $rentalStartDate = $request->rentalStartDate;
+        $rentalEndDate = $request->rentalEndDate;
 
         return Excel::download(
-            new ReportRentalExport($paymentStatus, $rentalStatus),
+            new ReportRentalExport($paymentStatus, $rentalStatus, $rentalStartDate, $rentalEndDate),
             'report-rental.xlsx'
         );
     }
@@ -88,13 +95,21 @@ class ReportTransactionsRentalController extends Controller
     {
         $paymentStatus = $request->paymentStatus;
         $rentalStatus = $request->rentalStatus;
+        $rentalStartDate = $request->rentalStartDate;
+        $rentalEndDate = $request->rentalEndDate;
 
         $data = TransactionsRental::with(['member', 'transportationRental.transportation', 'transportationRental.merk'])
             ->when($paymentStatus, fn($q) => $q->where('paymentStatus', $paymentStatus))
             ->when($rentalStatus, fn($q) => $q->where('rentalStatus', $rentalStatus))
+            ->when($rentalStartDate && $rentalEndDate, fn($q) => $q->whereBetween('rentalStartDate', [$rentalStartDate, $rentalEndDate]))
+            ->when($rentalStartDate && !$rentalEndDate, fn($q) => $q->whereDate('rentalStartDate', '>=', $rentalStartDate))
+            ->when(!$rentalStartDate && $rentalEndDate, fn($q) => $q->whereDate('rentalStartDate', '<=', $rentalEndDate))
             ->get();
-//dd($data);
-        $pdf = Pdf::loadView('exports.report-rental-pdf', ['data' => $data]);
+        if ($data->isEmpty()) {
+            $pdf = Pdf::loadView('exports.empty-pdf');
+        } else {
+            $pdf = Pdf::loadView('exports.report-rental-pdf', ['data' => $data, 'rentalStartDate' => $rentalStartDate, 'rentalEndDate' => $rentalEndDate]);
+        }
         return $pdf->download('rental-report.pdf');
     }
 

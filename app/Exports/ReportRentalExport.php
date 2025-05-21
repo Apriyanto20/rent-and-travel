@@ -10,11 +10,15 @@ class ReportRentalExport implements FromCollection, WithHeadings
 {
     protected $paymentStatus;
     protected $rentalStatus;
+    protected $rentalStartDate;
+    protected $rentalEndDate;
 
-    public function __construct($paymentStatus, $rentalStatus)
+    public function __construct($paymentStatus, $rentalStatus, $rentalStartDate, $rentalEndDate)
     {
         $this->paymentStatus = $paymentStatus;
         $this->rentalStatus = $rentalStatus;
+        $this->rentalStartDate = $rentalStartDate;
+        $this->rentalEndDate = $rentalEndDate;
     }
 
     public function collection()
@@ -22,7 +26,8 @@ class ReportRentalExport implements FromCollection, WithHeadings
         return TransactionsRental::with(['member', 'transportationRental'])
             ->when($this->paymentStatus, fn($q) => $q->where('paymentStatus', $this->paymentStatus))
             ->when($this->rentalStatus, fn($q) => $q->where('rentalStatus', $this->rentalStatus))
-            ->get()
+            ->when($this->rentalStartDate, fn($q) => $q->whereDate('rentalStartDate', '>=', $this->rentalStartDate))
+            ->when($this->rentalEndDate, fn($q) => $q->whereDate('rentalStartDate', '<=', $this->rentalEndDate))->get()
             ->map(function ($item) {
                 return [
                     $item->created_at,
