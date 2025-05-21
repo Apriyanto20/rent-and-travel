@@ -151,6 +151,13 @@
                                         <div>Transaction</div>
                                     </div>
                                 </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('reportRental.index')" :class="request()->routeIs('reportRental.index') ? 'text-gray-500 font-bold' : ''">
+                                    <div class="flex items-center justify-start gap-5">
+                                        <div class="mt-1"><i class="fi fi-ss-receipt"></i></div>
+                                        <div>Report</div>
+                                    </div>
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </li>

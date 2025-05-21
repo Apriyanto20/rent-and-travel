@@ -6,6 +6,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalOptionsController;
+use App\Http\Controllers\ReportTransactionsRentalController;
 use App\Http\Controllers\ScheduleTravelController;
 use App\Http\Controllers\TransactionsRentalController;
 use App\Http\Controllers\TransactionsTravelController;
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('scheduleTravel', ScheduleTravelController::class);
     Route::resource('transactionsTravel', TransactionsTravelController::class);
     Route::resource('transactionsRental', TransactionsRentalController::class);
+    Route::resource('reportRental', ReportTransactionsRentalController::class);
 
     Route::get('/generate-code-detail/{type}', [TransportationsRouteController::class, 'generateCodeDetail']);
     Route::get('/transportations-rental/{slug}', [TransportationsRouteController::class, 'category'])->name('transportationsRental.category');
@@ -67,6 +69,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/transactions-rental/{id}/update-pembayaran', [TransactionsRentalController::class, 'updatePembayaran'])->name('transactionsRental.updatePembayaran');
     Route::post('/transactions-rental/{id}/auto-cancel', [TransactionsRentalController::class, 'autoCancel']);
     Route::post('/transactions/check-expired', [TransactionsRentalController::class, 'checkExpired'])->name('transactions.checkExpired');
+    Route::get('/reportRental/pdf', [ReportTransactionsRentalController::class, 'pdf'])->name('reportRental.pdf');
+    Route::get('/reportRental/export/excel', [ReportTransactionsRentalController::class, 'exportExcel'])->name('reportRental.export.excel');
+
     Route::get('/get-driver/{nik}', function ($nik) {
         $driver = Drivers::where('nik', $nik)->first();
 

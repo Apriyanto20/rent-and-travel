@@ -117,7 +117,7 @@ class TransactionsRentalController extends Controller
 
         $expiredAt = Carbon::parse($transaction->created_at)->addMinutes(1);
 
-        if (now()->greaterThanOrEqualTo($expiredAt) && !$transaction->proofOfPayment) {
+        if (now()->greaterThanOrEqualTo($expiredAt) && !$transaction->proofOfPayment && $transaction->rentalStatus === "WAITING FOR PAYMENT" && $transaction->paymentStatus === "WAITING FOR PAYMENT") {
             $transaction->paymentStatus = 'CANCEL';
             $transaction->rentalStatus = 'CANCEL';
             $transaction->save();
